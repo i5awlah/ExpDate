@@ -20,6 +20,10 @@
 		909176CA293F407600392CAC /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176C9293F407600392CAC /* Extensions.swift */; };
 		909176CC293F41A200392CAC /* ProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176CB293F41A200392CAC /* ProductViewModel.swift */; };
 		909176CE293F41AD00392CAC /* ProductModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176CD293F41AD00392CAC /* ProductModel.swift */; };
+		909176D0294079F800392CAC /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176CF294079F800392CAC /* AppViewModel.swift */; };
+		909176D2294083C500392CAC /* DataScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176D1294083C500392CAC /* DataScannerView.swift */; };
+		909176D4294107FD00392CAC /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176D3294107FD00392CAC /* SoundManager.swift */; };
+		909176D62941083C00392CAC /* scanner-beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 909176D52941083C00392CAC /* scanner-beep.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +42,10 @@
 		909176C9293F407600392CAC /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		909176CB293F41A200392CAC /* ProductViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewModel.swift; sourceTree = "<group>"; };
 		909176CD293F41AD00392CAC /* ProductModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductModel.swift; sourceTree = "<group>"; };
+		909176CF294079F800392CAC /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
+		909176D1294083C500392CAC /* DataScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataScannerView.swift; sourceTree = "<group>"; };
+		909176D3294107FD00392CAC /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
+		909176D52941083C00392CAC /* scanner-beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "scanner-beep.mp3"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +104,7 @@
 				909176C2293F377500392CAC /* OnoardingView.swift */,
 				909176BA293F36EC00392CAC /* ProductView.swift */,
 				909176C6293F37E200392CAC /* ScanProductView.swift */,
+				909176D1294083C500392CAC /* DataScannerView.swift */,
 				909176BE293F372A00392CAC /* AddProductView.swift */,
 				909176C0293F373800392CAC /* EditProductView.swift */,
 				909176BC293F371400392CAC /* MembersView.swift */,
@@ -116,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				909176CB293F41A200392CAC /* ProductViewModel.swift */,
+				909176CF294079F800392CAC /* AppViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -124,8 +134,18 @@
 			isa = PBXGroup;
 			children = (
 				909176C9293F407600392CAC /* Extensions.swift */,
+				909176D72941084E00392CAC /* Sound */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		909176D72941084E00392CAC /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				909176D52941083C00392CAC /* scanner-beep.mp3 */,
+				909176D3294107FD00392CAC /* SoundManager.swift */,
+			);
+			path = Sound;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -187,6 +207,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				909176B1293F297F00392CAC /* Preview Assets.xcassets in Resources */,
+				909176D62941083C00392CAC /* scanner-beep.mp3 in Resources */,
 				909176AD293F297F00392CAC /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -200,7 +221,10 @@
 			files = (
 				909176C5293F379900392CAC /* SplashScreenView.swift in Sources */,
 				909176CA293F407600392CAC /* Extensions.swift in Sources */,
+				909176D0294079F800392CAC /* AppViewModel.swift in Sources */,
+				909176D2294083C500392CAC /* DataScannerView.swift in Sources */,
 				909176C7293F37E200392CAC /* ScanProductView.swift in Sources */,
+				909176D4294107FD00392CAC /* SoundManager.swift in Sources */,
 				909176BF293F372A00392CAC /* AddProductView.swift in Sources */,
 				909176CC293F41A200392CAC /* ProductViewModel.swift in Sources */,
 				909176C1293F373800392CAC /* EditProductView.swift in Sources */,
@@ -337,6 +361,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "The app needs camera access to scan a product's barcode and expiry date";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -375,6 +400,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "The app needs camera access to scan a product's barcode and expiry date";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
