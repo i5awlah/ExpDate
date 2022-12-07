@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension Color {
-    static let greenProgress = Color("greenProgress")
+    static let backgroundColor = Color("backgroundColor")
     static let redProgress = Color("redProgress")
     static let yellowProgress = Color("yellowProgress")
 }
