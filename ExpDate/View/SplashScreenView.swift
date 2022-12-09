@@ -13,10 +13,16 @@ struct SplashScreenView: View {
     @State private var size = 0.5
     @State private var opacity = 0.5
     
+    @AppStorage("isUserOnboarded") var isUserOnboarded: Bool = false
+    
     var body: some View {
         
         if isActive {
-            ProductView()
+            if !isUserOnboarded {
+                OnbordingView()
+            } else {
+                ProductView()
+            }
         } else {
             ZStack {
                 Color.backgroundColor

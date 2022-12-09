@@ -45,7 +45,7 @@ enum OnbordingType: CaseIterable {
         case .scan:
             return "Scan any product barcode with easiest way."
         case .track:
-            return "Track your proudects validity through colors."
+            return "Track your products validity through colors to get the most benefit of it!"
         case .remind:
             return "Enable notification to get reminder in your chosen time."
         case .share:
@@ -57,36 +57,31 @@ enum OnbordingType: CaseIterable {
 
 struct OnbordingView: View {
     
+    @AppStorage("isUserOnboarded") var isUserOnboarded: Bool = false
     @State var selectedOnbordingType: OnbordingType = .scan
     
     var body: some View {
         ZStack {
             
-            if selectedOnbordingType != .share {
-                VStack {
-                    Text("skip")
-                        .frame(maxWidth: .infinity, alignment: .trailing)
-                        .padding(.trailing ,30)
-                        .foregroundColor(.secondary)
-
-                        .onTapGesture {
-                            //MARK:
-                        }
-                    Spacer()
-                }
-            }
-            
-            TabView {
+            TabView(selection: $selectedOnbordingType) {
                 
                 ForEach(OnbordingType.allCases, id: \.title) { onbording in
-                    SingleOnbording(onbordingType: onbording)
-                        .onAppear{
-                            selectedOnbordingType = onbording
-                        }
+                    SingleOnbordingView(onbordingType: onbording)
+                        .tag(onbording)
+                        .onChange(of: selectedOnbordingType, perform: { newValue in
+                            selectedOnbordingType = newValue
+                        })
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .always))
+            
+            if selectedOnbordingType != .share {
+                skipButton
+            }
+        }
+        .onAppear {
+            setupAppearance()
         }
     }
 }
@@ -97,40 +92,28 @@ struct OnbordingView_Previews: PreviewProvider {
     }
 }
 
-struct SingleOnbording: View {
-    let onbordingType: OnbordingType
-    
-    
-    var body: some View {
-        
-        VStack(spacing:20) {
-            Image(onbordingType.image)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 300, height: 300)
-            
-            Text(onbordingType.title)
-                .font(.title).bold()
-            
-            Text(onbordingType.description)
-                .multilineTextAlignment(.center)
-                .foregroundColor(.secondary)
-            
-            if onbordingType == .share {
-                Button("Get Started"){
-                }
-                .font(.headline)
-                .padding()
-                .foregroundColor(.white)
-                .frame(width: 300, height: 50)
-                .background(Color("AccentColor"))
-                .mask(RoundedRectangle(cornerRadius: 10, style: .continuous))
+extension OnbordingView {
+    var skipButton: some View {
+        Button {
+            withAnimation(.spring()) {
+                isUserOnboarded = true
             }
-
+        } label: {
+            Text("skip")
+                .padding(10)
         }
-        .padding(.horizontal,40)
-        
-        
+        .padding(.top, 1)
+        .padding(.trailing ,30)
+        .frame(maxWidth: .infinity, alignment: .trailing)
+        .frame(maxHeight: .infinity, alignment: .top)
+        .foregroundColor(.secondary)
+    }
+}
+
+extension OnbordingView {
+    func setupAppearance() {
+        UIPageControl.appearance().currentPageIndicatorTintColor = .black
+        UIPageControl.appearance().pageIndicatorTintColor = UIColor.black.withAlphaComponent(0.2)
     }
 }
 
