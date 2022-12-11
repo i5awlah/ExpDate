@@ -24,6 +24,7 @@
 		909176D2294083C500392CAC /* DataScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176D1294083C500392CAC /* DataScannerView.swift */; };
 		909176D4294107FD00392CAC /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176D3294107FD00392CAC /* SoundManager.swift */; };
 		909176D62941083C00392CAC /* scanner-beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 909176D52941083C00392CAC /* scanner-beep.mp3 */; };
+		E07743632941BE14009E1A25 /* ProductCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07743622941BE14009E1A25 /* ProductCellView.swift */; };
 		909176D92942671800392CAC /* SingleOnbordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176D82942671800392CAC /* SingleOnbordingView.swift */; };
 		909176DC294398CF00392CAC /* APICallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176DB294398CF00392CAC /* APICallManager.swift */; };
 		909176DF2943992600392CAC /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 909176DE2943992600392CAC /* Alamofire */; };
@@ -51,6 +52,7 @@
 		909176D1294083C500392CAC /* DataScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataScannerView.swift; sourceTree = "<group>"; };
 		909176D3294107FD00392CAC /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		909176D52941083C00392CAC /* scanner-beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "scanner-beep.mp3"; sourceTree = "<group>"; };
+		E07743622941BE14009E1A25 /* ProductCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCellView.swift; sourceTree = "<group>"; };
 		909176D82942671800392CAC /* SingleOnbordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleOnbordingView.swift; sourceTree = "<group>"; };
 		909176DB294398CF00392CAC /* APICallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICallManager.swift; sourceTree = "<group>"; };
 		909176E02943995000392CAC /* ProductResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductResponse.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				909176C0293F373800392CAC /* EditProductView.swift */,
 				909176BC293F371400392CAC /* MembersView.swift */,
 				909176AC293F297F00392CAC /* Assets.xcassets */,
+				E07743622941BE14009E1A25 /* ProductCellView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 				909176CA293F407600392CAC /* Extensions.swift in Sources */,
 				909176D0294079F800392CAC /* AppViewModel.swift in Sources */,
 				909176D2294083C500392CAC /* DataScannerView.swift in Sources */,
+				E07743632941BE14009E1A25 /* ProductCellView.swift in Sources */,
 				909176C7293F37E200392CAC /* ScanProductView.swift in Sources */,
 				909176D4294107FD00392CAC /* SoundManager.swift in Sources */,
 				909176D92942671800392CAC /* SingleOnbordingView.swift in Sources */,
