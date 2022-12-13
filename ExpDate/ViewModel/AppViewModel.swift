@@ -52,6 +52,7 @@ final class AppViewModel: ObservableObject {
     }
     
     var barcodeID: String?
+    var expDate: String?
     
       var dataScannerViewId: Int {
         var hasher = Hasher()

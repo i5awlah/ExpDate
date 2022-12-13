@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct ProductCellView: View {
-    @State var valueProgress: Double = 20
-    
-    let productName: String
-    let productImage: String
-    let leftDate: String
+    var valueProgress: Double {
+        let dayLeft = Double (product.recordCreationDate?.diff_day ?? 0) * -1
+        let total = Double (product.expiry.diff_day) + dayLeft
+        return (dayLeft * 100) / total
+    }
+
+    let product: ProductModel
     
     var body: some View {
         
@@ -28,7 +30,7 @@ struct ProductCellView: View {
                             .stroke(Color(uiColor: .systemGray4) , lineWidth: 0.5)
                             .frame(width: 60, height: 60)
                             .overlay{
-                                AsyncImage(url: URL(string: "https://i-cf65.ch-static.com/content/dam/cf-consumer-healthcare/panadol/en_eg/Products/455x455-en%20eg_new.jpg?auto=format")) { image in
+                                AsyncImage(url: URL(string: product.imageurl)) { image in
                                     image
                                         .resizable()
                                         .frame(width: 50,height:50)
@@ -38,31 +40,36 @@ struct ProductCellView: View {
                                 }
                             }
                         
-                        Text(productName)
+                        Text(product.name)
                             .font(.system(size: 16))
                             .frame(maxHeight: .infinity)
                         Spacer()
                         
-                        Text(leftDate)
+                        Text(product.expiry.polite)
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundColor(product.expiry.polite == "Expired" ? .red : .gray)
                     
                       
                     }
                     .padding(.top, 10)
                     
                     ProgressView(value: valueProgress, total: 100)
-                        .tint(.yellowProgress)
+                        .tint( valueProgress > 85 ? .redProgress : .yellowProgress)
                         .progressViewStyle(.linear)
                         .padding(.bottom, 10)
                 }
                 .padding(.horizontal, 10)
             }
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.white)
+                    .frame(height: 88)
+                    .opacity(product.expiry.polite == "Expired" ? 0.6 : 0)
+            }
     }
 }
 struct ProductCellView_Previews: PreviewProvider {
     static var previews: some View {
-        ProductView()
+        ProductCellView(product: ProductModel.testProduct)
     }
 }
-

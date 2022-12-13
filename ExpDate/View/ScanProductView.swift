@@ -21,6 +21,9 @@ struct ScanProductView: View {
             closeButton
             
         }
+        .onAppear{
+            vm.recognizedItems = []
+        }
         .navigationTitle("Scan")
         .toolbar(.hidden)
         
@@ -58,17 +61,28 @@ extension ScanProductView {
     func handleRecognizedText() {
         print("handleRecognizedText..")
         if vm.recognizedText != nil {
-            // play a beeb sound when the barcode is recognized
-            SoundManager.shared.playSound()
-            
-            // save recognized barcode on barcodeID
-            vm.barcodeID = vm.recognizedText
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                isPresentedAddView.toggle()
+            if vm.scanType == .barcode {
+                print("barcode")
+                // play a beeb sound when the barcode is recognized
+                SoundManager.shared.playSound()
+                
+                // save recognized barcode on barcodeID
+                vm.barcodeID = vm.recognizedText
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    isPresentedScan.toggle()
+                    isPresentedAddView.toggle()
+                }
+            } else {
+                print("date")
+                // save recognized barcode on date
+                vm.expDate = vm.recognizedText
+                // close
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                    isPresentedScan.toggle()
+                }
             }
         }
-        
     }
 }
 
