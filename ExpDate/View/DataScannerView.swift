@@ -47,24 +47,24 @@ struct DataScannerView: UIViewControllerRepresentable {
         }
         
         func dataScanner(_ dataScanner: DataScannerViewController, didTapOn item: RecognizedItem) {
-            print("didTapOn \(item)")
+//            print("didTapOn \(item)")
         }
         
         func dataScanner(_ dataScanner: DataScannerViewController, didAdd addedItems: [RecognizedItem], allItems: [RecognizedItem]) {
             UINotificationFeedbackGenerator().notificationOccurred(.success)
             recognizedItems.append(contentsOf: addedItems)
-            print("didAddItems \(addedItems)")
+//            print("didAddItems \(addedItems)")
         }
         
         func dataScanner(_ dataScanner: DataScannerViewController, didRemove removedItems: [RecognizedItem], allItems: [RecognizedItem]) {
             self.recognizedItems = recognizedItems.filter { item in
                 !removedItems.contains(where: {$0.id == item.id })
             }
-            print("didRemovedItems \(removedItems)")
+//            print("didRemovedItems \(removedItems)")
         }
         
         func dataScanner(_ dataScanner: DataScannerViewController, becameUnavailableWithError error: DataScannerViewController.ScanningUnavailable) {
-            print("became unavailable with error \(error.localizedDescription)")
+//            print("became unavailable with error \(error.localizedDescription)")
         }
         
     }

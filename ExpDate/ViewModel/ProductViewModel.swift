@@ -72,6 +72,7 @@ class ProductViewModel: ObservableObject {
                         DispatchQueue.main.async {
                             self.selectedCategory = .all
                             self.products.append(product)
+                            self.products = self.products.sorted(by: {$0.expiry < $1.expiry})
                         }
                     }
                 }
@@ -105,7 +106,7 @@ class ProductViewModel: ObservableObject {
                         }
                     }
                 DispatchQueue.main.async {
-                    self.products = products
+                    self.products = products.sorted(by: {$0.expiry < $1.expiry})
                 }
                 
             case .failure(let error):

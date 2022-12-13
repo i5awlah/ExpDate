@@ -10,6 +10,7 @@ class ProductAPIViewModel : ObservableObject {
     
     @Published var productService: ProductService = ProductService()
     @Published var product: Product
+    @Published var isFeaching = false
     
     init() {
         self.product = Product(productname: "", imageurl: "", producturl: "", price: "", currency: "", saleprice: "", storename: "")
@@ -23,7 +24,7 @@ class ProductAPIViewModel : ObservableObject {
                         
                         print("response: \(response)")
                         self.product = response.product
-                        
+                        self.isFeaching = true
                     },
                     onFailure: {(message) in
                         print("message \(message)")

@@ -45,6 +45,12 @@ extension Date {
         
         return components.day ?? 0  // This will return the number of day(s) between dates
     }
+    
+    var toString: String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd/MM/YY"
+        return dateFormatter.string(from: self)
+    }
 }
 
 
@@ -152,11 +158,12 @@ extension String {
         
         for format in DateFormatType.allCases {
             dateFormatter.dateFormat = format.stringFormat
+            dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
             if let date = dateFormatter.date(from: self) {
                 return date
             }
         }
-        print("********")
+        print("not convert to date")
         return Date()
     }
 }

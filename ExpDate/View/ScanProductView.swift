@@ -39,6 +39,9 @@ extension ScanProductView {
         .background { Color.gray.opacity(0.3) }
         .ignoresSafeArea()
         .id(vm.dataScannerViewId)
+        .onAppear{
+            vm.recognizedItems = []
+        }
         .onChange(of: vm.scanType) { _ in vm.recognizedItems = [] }
         .onChange(of: vm.recognizedText) { _ in handleRecognizedText() }
     }

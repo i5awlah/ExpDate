@@ -25,9 +25,12 @@ struct ProductModel {
     let afterOpeningExpiration: Int // day
     let productCategory: String
     let quantity: Int
-    let notificationTime: Date
+    var notificationTime: Date
     
     var expiry: Date {
+        if afterOpeningExpiration == 0 {
+            return expirationDate
+        }
         // Calc the secondExpirationDate by Adding afterOpeningExpiration to openDate
         var dateComponent = DateComponents()
         dateComponent.day = afterOpeningExpiration
@@ -40,7 +43,7 @@ struct ProductModel {
         }
     }
     
-    init(recordId: CKRecord.ID? = nil, recordCreationDate: Date? = .now, imageurl: String, name: String, expirationDate: Date, openDate: Date, afterOpeningExpiration: Int, productCategory: ProductCategory, quantity: Int, notificationTime: Date) {
+    init(recordId: CKRecord.ID? = nil, recordCreationDate: Date? = nil, imageurl: String, name: String, expirationDate: Date, openDate: Date, afterOpeningExpiration: Int, productCategory: ProductCategory, quantity: Int, notificationTime: Date) {
         self.recordId = recordId
         self.recordCreationDate = recordCreationDate
         self.imageurl = imageurl
@@ -91,6 +94,6 @@ extension ProductModel {
         let recordCreationDate: Date = formatter.date(from: "2022-12-01T18:01:55Z") ?? .now
         let notificationTime: Date = formatter.date(from: "2022-12-25T18:01:55Z") ?? .now
         
-        return ProductModel(recordCreationDate: recordCreationDate, imageurl: "https://123office.com/products/10652/images/2065144/9438490__67880.1651139149.1280.1280.jpg?c=1", name: "Carmex Moisturizing Lip Balm, Original Flavor", expirationDate: expirationDate, openDate: openDate, afterOpeningExpiration: 10, productCategory: .selfCare, quantity: 1, notificationTime: notificationTime)
+        return ProductModel(recordCreationDate: recordCreationDate, imageurl: "https://123office.com/products/10652/images/2065144/9438490__67880.1651139149.1280.1280.jpg?c=1", name: "Carmex Moisturizing Lip Balm, Original Flavor", expirationDate: expirationDate, openDate: openDate, afterOpeningExpiration: 90, productCategory: .selfCare, quantity: 2, notificationTime: notificationTime)
     }
 }

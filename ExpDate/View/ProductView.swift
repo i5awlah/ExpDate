@@ -54,7 +54,7 @@ struct ProductView: View {
             
             .navigationTitle("My List")
             .navigationDestination(isPresented: $isPresentedAddView) {
-                AddProductView(isPresentedAddView: $isPresentedAddView, barcodeID: vm.barcodeID)
+                AddProductView(isPresentedAddView: $isPresentedAddView)
         }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

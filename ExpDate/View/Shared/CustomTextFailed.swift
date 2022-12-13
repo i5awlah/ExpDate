@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-struct CustomText: View {
+struct CustomTextField: View {
     
     let label: String
+    let placeholder: String
     @Binding var text: String
     
     var body: some View {
@@ -22,8 +23,18 @@ struct CustomText: View {
         .background(.white)
         .cornerRadius(5)
         .offset(y: -23)
-        TextField("", text: $text)
+            if label == "Product Name" {
+                TextField(placeholder, text: $text)
+            } else {
+                Rectangle()
+                    .fill(Color.clear)
+                    .overlay(alignment: .leading) {
+                        Text(text == "" ? placeholder : text)
+                            .foregroundColor(text == "" ? Color(uiColor: .systemGray3) : .black)
+                    }
+            }
         }
+        .font(.callout)
         .foregroundColor(.black)
         .padding(.vertical, 5)
         .padding(.horizontal, 10)
@@ -39,6 +50,10 @@ struct CustomText: View {
 
 struct CustomTextFailed_Previews: PreviewProvider {
     static var previews: some View {
-        CustomText(label: "name", text: .constant("may"))
+        VStack {
+            CustomTextField(label: "Product Name", placeholder: "enter", text: .constant(""))
+            CustomTextField(label: "exp date", placeholder: "enter", text: .constant(""))
+        }
+        .padding()
     }
 }

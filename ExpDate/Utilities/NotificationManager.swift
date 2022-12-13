@@ -23,7 +23,7 @@ class NotificationManager {
     }
     
     
-    func scheduleNotification(in notificationDate: Date, for product: ProductModel) {
+    func scheduleNotification(for product: ProductModel) {
         let content = UNMutableNotificationContent()
         content.title = "ExpDate App"
         content.body = "The expiry date of the \(product.name) is coming to an end!"
@@ -31,30 +31,28 @@ class NotificationManager {
         
         let calendar = Calendar.current
         var dateInfo = DateComponents()
-        dateInfo.day = calendar.component(.day, from: notificationDate)
-        dateInfo.month = calendar.component(.month, from: notificationDate)
-        dateInfo.year = calendar.component(.year, from: notificationDate)
-        dateInfo.hour = calendar.component(.hour, from: notificationDate)
-        dateInfo.minute = calendar.component(.minute, from: notificationDate)
+        dateInfo.day = calendar.component(.day, from: product.notificationTime)
+        dateInfo.month = calendar.component(.month, from: product.notificationTime)
+        dateInfo.year = calendar.component(.year, from: product.notificationTime)
+        dateInfo.hour = calendar.component(.hour, from: product.notificationTime)
+        dateInfo.minute = calendar.component(.minute, from: product.notificationTime)
         print(dateInfo)
         //specify if repeats or no
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateInfo, repeats: false)
         
         // pass identifier
-//        guard let recordID = product.recordId else { return }
-//        let identifier =  recordID.recordName
         let identifier = product.name
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         
         // add our notification request
         UNUserNotificationCenter.current().add(request) { error in
-            print("Error: \(error?.localizedDescription)")
+            if let error {
+                print("Error: \(error.localizedDescription)")
+            }
         }
     }
     
     func cancelNotification(for product: ProductModel) {
-//        guard let recordID = product.recordId else { return }
-//        let identifier =  recordID.recordName
         let identifier = product.name
         UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier])
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
