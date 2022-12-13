@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2CCC53902940735F0006BE86 /* CustomTextFailed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC538F2940735F0006BE86 /* CustomTextFailed.swift */; };
 		5404DC2929407D8F0076FAA1 /* MemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5404DC2829407D8F0076FAA1 /* MemberCell.swift */; };
 		909176A9293F297D00392CAC /* ExpDateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176A8293F297D00392CAC /* ExpDateApp.swift */; };
 		909176AD293F297F00392CAC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 909176AC293F297F00392CAC /* Assets.xcassets */; };
@@ -37,6 +38,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+
+		2CCC538F2940735F0006BE86 /* CustomTextFailed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextFailed.swift; sourceTree = "<group>"; };
 		5404DC2829407D8F0076FAA1 /* MemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberCell.swift; sourceTree = "<group>"; };
 		909176A5293F297D00392CAC /* ExpDate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExpDate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		909176A8293F297D00392CAC /* ExpDateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpDateApp.swift; sourceTree = "<group>"; };
@@ -79,6 +82,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2CCC5391294073660006BE86 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				2CCC538F2940735F0006BE86 /* CustomTextFailed.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		9091769C293F297D00392CAC = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +140,7 @@
 				909176BE293F372A00392CAC /* AddProductView.swift */,
 				909176C0293F373800392CAC /* EditProductView.swift */,
 				909176BC293F371400392CAC /* MembersView.swift */,
+				2CCC5391294073660006BE86 /* Shared */,
 				5404DC2829407D8F0076FAA1 /* MemberCell.swift */,
 				909176AC293F297F00392CAC /* Assets.xcassets */,
 				E07743622941BE14009E1A25 /* ProductCellView.swift */,
@@ -265,6 +277,7 @@
 				909176DC294398CF00392CAC /* APICallManager.swift in Sources */,
 				909176C5293F379900392CAC /* SplashScreenView.swift in Sources */,
 				909176CA293F407600392CAC /* Extensions.swift in Sources */,
+				2CCC53902940735F0006BE86 /* CustomTextFailed.swift in Sources */,
 				909176D0294079F800392CAC /* AppViewModel.swift in Sources */,
 				909176D2294083C500392CAC /* DataScannerView.swift in Sources */,
 				E07743632941BE14009E1A25 /* ProductCellView.swift in Sources */,
