@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2CCC53902940735F0006BE86 /* CustomTextFailed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC538F2940735F0006BE86 /* CustomTextFailed.swift */; };
+		5404DC2929407D8F0076FAA1 /* MemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5404DC2829407D8F0076FAA1 /* MemberCell.swift */; };
 		909176A9293F297D00392CAC /* ExpDateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176A8293F297D00392CAC /* ExpDateApp.swift */; };
 		909176AD293F297F00392CAC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 909176AC293F297F00392CAC /* Assets.xcassets */; };
 		909176B1293F297F00392CAC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 909176B0293F297F00392CAC /* Preview Assets.xcassets */; };
@@ -21,10 +22,25 @@
 		909176CA293F407600392CAC /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176C9293F407600392CAC /* Extensions.swift */; };
 		909176CC293F41A200392CAC /* ProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176CB293F41A200392CAC /* ProductViewModel.swift */; };
 		909176CE293F41AD00392CAC /* ProductModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176CD293F41AD00392CAC /* ProductModel.swift */; };
+		909176D0294079F800392CAC /* AppViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176CF294079F800392CAC /* AppViewModel.swift */; };
+		909176D2294083C500392CAC /* DataScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176D1294083C500392CAC /* DataScannerView.swift */; };
+		909176D4294107FD00392CAC /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176D3294107FD00392CAC /* SoundManager.swift */; };
+		909176D62941083C00392CAC /* scanner-beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 909176D52941083C00392CAC /* scanner-beep.mp3 */; };
+		909176D92942671800392CAC /* SingleOnbordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176D82942671800392CAC /* SingleOnbordingView.swift */; };
+		909176DC294398CF00392CAC /* APICallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176DB294398CF00392CAC /* APICallManager.swift */; };
+		909176DF2943992600392CAC /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 909176DE2943992600392CAC /* Alamofire */; };
+		909176E12943995000392CAC /* ProductResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176E02943995000392CAC /* ProductResponse.swift */; };
+		909176E3294399A900392CAC /* ProductService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176E2294399A900392CAC /* ProductService.swift */; };
+		90917723294607FA00392CAC /* CloudViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90917722294607FA00392CAC /* CloudViewModel.swift */; };
+		9091772529463E5E00392CAC /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9091772429463E5E00392CAC /* NotificationManager.swift */; };
+		90917727294684DE00392CAC /* ProductAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90917726294684DE00392CAC /* ProductAPIViewModel.swift */; };
+		E07743632941BE14009E1A25 /* ProductCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07743622941BE14009E1A25 /* ProductCellView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+
 		2CCC538F2940735F0006BE86 /* CustomTextFailed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextFailed.swift; sourceTree = "<group>"; };
+		5404DC2829407D8F0076FAA1 /* MemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberCell.swift; sourceTree = "<group>"; };
 		909176A5293F297D00392CAC /* ExpDate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExpDate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		909176A8293F297D00392CAC /* ExpDateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpDateApp.swift; sourceTree = "<group>"; };
 		909176AC293F297F00392CAC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -40,6 +56,18 @@
 		909176C9293F407600392CAC /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		909176CB293F41A200392CAC /* ProductViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewModel.swift; sourceTree = "<group>"; };
 		909176CD293F41AD00392CAC /* ProductModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductModel.swift; sourceTree = "<group>"; };
+		909176CF294079F800392CAC /* AppViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppViewModel.swift; sourceTree = "<group>"; };
+		909176D1294083C500392CAC /* DataScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataScannerView.swift; sourceTree = "<group>"; };
+		909176D3294107FD00392CAC /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
+		909176D52941083C00392CAC /* scanner-beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "scanner-beep.mp3"; sourceTree = "<group>"; };
+		909176D82942671800392CAC /* SingleOnbordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleOnbordingView.swift; sourceTree = "<group>"; };
+		909176DB294398CF00392CAC /* APICallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICallManager.swift; sourceTree = "<group>"; };
+		909176E02943995000392CAC /* ProductResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductResponse.swift; sourceTree = "<group>"; };
+		909176E2294399A900392CAC /* ProductService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductService.swift; sourceTree = "<group>"; };
+		90917722294607FA00392CAC /* CloudViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudViewModel.swift; sourceTree = "<group>"; };
+		9091772429463E5E00392CAC /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		90917726294684DE00392CAC /* ProductAPIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAPIViewModel.swift; sourceTree = "<group>"; };
+		E07743622941BE14009E1A25 /* ProductCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCellView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				909176DF2943992600392CAC /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,13 +133,17 @@
 				909176A8293F297D00392CAC /* ExpDateApp.swift */,
 				909176C4293F379900392CAC /* SplashScreenView.swift */,
 				909176C2293F377500392CAC /* OnoardingView.swift */,
+				909176D82942671800392CAC /* SingleOnbordingView.swift */,
 				909176BA293F36EC00392CAC /* ProductView.swift */,
 				909176C6293F37E200392CAC /* ScanProductView.swift */,
+				909176D1294083C500392CAC /* DataScannerView.swift */,
 				909176BE293F372A00392CAC /* AddProductView.swift */,
 				909176C0293F373800392CAC /* EditProductView.swift */,
 				909176BC293F371400392CAC /* MembersView.swift */,
 				2CCC5391294073660006BE86 /* Shared */,
+				5404DC2829407D8F0076FAA1 /* MemberCell.swift */,
 				909176AC293F297F00392CAC /* Assets.xcassets */,
+				E07743622941BE14009E1A25 /* ProductCellView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -119,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				909176CD293F41AD00392CAC /* ProductModel.swift */,
+				909176E02943995000392CAC /* ProductResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -127,6 +161,8 @@
 			isa = PBXGroup;
 			children = (
 				909176CB293F41A200392CAC /* ProductViewModel.swift */,
+				909176CF294079F800392CAC /* AppViewModel.swift */,
+				90917722294607FA00392CAC /* CloudViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -134,9 +170,31 @@
 		909176C8293F406000392CAC /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				909176DA294398A300392CAC /* API */,
 				909176C9293F407600392CAC /* Extensions.swift */,
+				909176D72941084E00392CAC /* Sound */,
+				9091772429463E5E00392CAC /* NotificationManager.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		909176D72941084E00392CAC /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				909176D52941083C00392CAC /* scanner-beep.mp3 */,
+				909176D3294107FD00392CAC /* SoundManager.swift */,
+			);
+			path = Sound;
+			sourceTree = "<group>";
+		};
+		909176DA294398A300392CAC /* API */ = {
+			isa = PBXGroup;
+			children = (
+				909176DB294398CF00392CAC /* APICallManager.swift */,
+				909176E2294399A900392CAC /* ProductService.swift */,
+				90917726294684DE00392CAC /* ProductAPIViewModel.swift */,
+			);
+			path = API;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -155,6 +213,9 @@
 			dependencies = (
 			);
 			name = ExpDate;
+			packageProductDependencies = (
+				909176DE2943992600392CAC /* Alamofire */,
+			);
 			productName = ExpDate;
 			productReference = 909176A5293F297D00392CAC /* ExpDate.app */;
 			productType = "com.apple.product-type.application";
@@ -183,6 +244,9 @@
 				Base,
 			);
 			mainGroup = 9091769C293F297D00392CAC;
+			packageReferences = (
+				909176DD2943992600392CAC /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			productRefGroup = 909176A6293F297D00392CAC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -198,6 +262,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				909176B1293F297F00392CAC /* Preview Assets.xcassets in Resources */,
+				909176D62941083C00392CAC /* scanner-beep.mp3 in Resources */,
 				909176AD293F297F00392CAC /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -209,18 +274,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				909176DC294398CF00392CAC /* APICallManager.swift in Sources */,
 				909176C5293F379900392CAC /* SplashScreenView.swift in Sources */,
 				909176CA293F407600392CAC /* Extensions.swift in Sources */,
 				2CCC53902940735F0006BE86 /* CustomTextFailed.swift in Sources */,
+				909176D0294079F800392CAC /* AppViewModel.swift in Sources */,
+				909176D2294083C500392CAC /* DataScannerView.swift in Sources */,
+				E07743632941BE14009E1A25 /* ProductCellView.swift in Sources */,
 				909176C7293F37E200392CAC /* ScanProductView.swift in Sources */,
+				909176D4294107FD00392CAC /* SoundManager.swift in Sources */,
+				909176D92942671800392CAC /* SingleOnbordingView.swift in Sources */,
 				909176BF293F372A00392CAC /* AddProductView.swift in Sources */,
 				909176CC293F41A200392CAC /* ProductViewModel.swift in Sources */,
 				909176C1293F373800392CAC /* EditProductView.swift in Sources */,
+				909176E12943995000392CAC /* ProductResponse.swift in Sources */,
 				909176BB293F36EC00392CAC /* ProductView.swift in Sources */,
+				90917723294607FA00392CAC /* CloudViewModel.swift in Sources */,
+				5404DC2929407D8F0076FAA1 /* MemberCell.swift in Sources */,
 				909176CE293F41AD00392CAC /* ProductModel.swift in Sources */,
 				909176A9293F297D00392CAC /* ExpDateApp.swift in Sources */,
+				90917727294684DE00392CAC /* ProductAPIViewModel.swift in Sources */,
 				909176C3293F377500392CAC /* OnoardingView.swift in Sources */,
+				9091772529463E5E00392CAC /* NotificationManager.swift in Sources */,
 				909176BD293F371400392CAC /* MembersView.swift in Sources */,
+				909176E3294399A900392CAC /* ProductService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,6 +426,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "The app needs camera access to scan a product's barcode and expiry date";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -387,6 +465,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "The app needs camera access to scan a product's barcode and expiry date";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -434,6 +513,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		909176DD2943992600392CAC /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		909176DE2943992600392CAC /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 909176DD2943992600392CAC /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9091769D293F297D00392CAC /* Project object */;
 }
