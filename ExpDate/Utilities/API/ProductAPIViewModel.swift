@@ -13,7 +13,7 @@ class ProductAPIViewModel : ObservableObject {
     @Published var isFeaching = false
     
     init() {
-        self.product = Product(productname: "", imageurl: "", producturl: "", price: "", currency: "", saleprice: "", storename: "")
+        self.product = Product(images: [], title: "")
     }
     
     func getProductAPI(productID: String) {

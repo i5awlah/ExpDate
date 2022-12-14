@@ -77,7 +77,7 @@ struct AddProductView: View {
         }
         .onChange(of: productApiViewModel.isFeaching, perform: { _ in
             if productApiViewModel.isFeaching {
-                productName = productApiViewModel.product.productname
+                productName = productApiViewModel.product.title
             }
         })
         .onChange(of: vm.expDate, perform: { newValue in
@@ -95,7 +95,10 @@ struct AddProductView: View {
     }
     
     var productImage: some View {
-        AsyncImage(url: URL(string: productApiViewModel.product.imageurl)) { image in
+        AsyncImage(url: URL(
+            string: productApiViewModel.product.images.isEmpty ? "" : productApiViewModel.product.images[0]
+        )
+        ) { image in
             ZStack {
                 image
                     .resizable()
@@ -327,9 +330,10 @@ extension AddProductView {
     func addProduct() {
         
         NotificationManager.shared.requestPermission()
+        let imageurl = productApiViewModel.product.images.isEmpty ? "" : productApiViewModel.product.images[0]
         
         var newProduct = ProductModel(
-            imageurl: productApiViewModel.product.imageurl,
+            imageurl: imageurl,
             name: productName,
             expirationDate: expirationDate,
             openDate: openedDate,

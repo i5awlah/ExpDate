@@ -10,13 +10,18 @@ import Alamofire
 
 class APICallManager {
     static let shared = APICallManager()
+    
+    let headers: HTTPHeaders = [
+        "X-RapidAPI-Key": "36d8e68db9msh690f129e2fd1053p1f4a79jsn4c9891c56a3b",
+        "X-RapidAPI-Host": "barcodes1.p.rapidapi.com"
+    ]
 
     func createRequest(
         _ url: String,
         onSuccess successCallback: ((ProductResponse) -> Void)?,
         onFailure failureCallback: ((String) -> Void)?
     ) {
-        AF.request(url).responseData { response in
+        AF.request(url, method: .get, headers: headers).responseData { response in
             switch response.result {
             case .success(let data):
                 do {

@@ -7,16 +7,14 @@
 
 import Foundation
 
-// MARK: - ProductResponse
+// MARK: - ProductRe
 struct ProductResponse: Codable {
     let product: Product
-    enum CodingKeys: String, CodingKey {
-        case product = "0"
-    }
 }
 
 // MARK: - Product
 struct Product: Codable {
-    let productname, imageurl, producturl, price: String
-    let currency, saleprice, storename: String
+
+    let images: [String]
+    let title: String
 }

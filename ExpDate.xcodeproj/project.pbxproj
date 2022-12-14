@@ -38,7 +38,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-
 		2CCC538F2940735F0006BE86 /* CustomTextFailed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextFailed.swift; sourceTree = "<group>"; };
 		5404DC2829407D8F0076FAA1 /* MemberCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberCell.swift; sourceTree = "<group>"; };
 		909176A5293F297D00392CAC /* ExpDate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExpDate.app; sourceTree = BUILT_PRODUCTS_DIR; };
