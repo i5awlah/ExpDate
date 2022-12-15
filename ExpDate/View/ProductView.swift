@@ -7,13 +7,14 @@
 
 import SwiftUI
 
-
+enum ListType: String, CaseIterable {
+    case privateList = "My List"
+    case sharedList = "Shared List"
+}
 
 struct ProductView: View {
-    @State private var showListAlert : Bool = false
-    @State private var isSheetPresented = false
-    @State private var listName = ""
-    
+    @State private var isActionSheetPresented = false
+    @State private var selectedList: ListType = .privateList
     
     @StateObject var productVM = ProductViewModel()
     @StateObject private var vm = AppViewModel()
@@ -41,26 +42,19 @@ struct ProductView: View {
                 }
                 
             }
-            .actionSheet(isPresented: $isSheetPresented) {
+            .actionSheet(isPresented: $isActionSheetPresented) {
                 listActionSheet
             }
-            .alert("List Name", isPresented: $showListAlert, actions: {
-                TextField("List Name", text: $listName)
-                Button("Add", action: {})
-                Button("Cancel", role: .cancel, action: {})
-            }, message: {
-                Text("Please enter the name of list.")
-            })
             
-            .navigationTitle("My List")
+            .navigationTitle(selectedList.rawValue)
             .navigationDestination(isPresented: $isPresentedAddView) {
                 AddProductView(isPresentedAddView: $isPresentedAddView)
         }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    shareButton
-                }
+//                ToolbarItem(placement: .navigationBarTrailing) {
+//                    shareButton
+//                }
                 ToolbarItem(placement: .navigationBarLeading) {
                     listButton
                 }
@@ -156,7 +150,7 @@ extension ProductView {
     
     var listButton: some View {
         Button {
-            self.isSheetPresented.toggle()
+            self.isActionSheetPresented.toggle()
         } label: {
             Label("Lists", systemImage:"line.3.horizontal" )
                 .foregroundColor(.black)
@@ -164,15 +158,17 @@ extension ProductView {
     }
     
     var listActionSheet: ActionSheet {
-        ActionSheet(title: Text("Choose a list") , message: Text("Choose existing list or create new list") , buttons: [
-            .default(Text("My List"), action: {}),
-            .default(Text("Family List") , action:{}),
-            .default(Text("+ Add new list") , action:{
-                showListAlert.toggle()
-                
-            }),
-            .cancel()
-            , ]
+        var actionsheetButton: [ActionSheet.Button] = []
+        for list in ListType.allCases {
+            actionsheetButton.append(.default(Text(list.rawValue), action: { selectedList = list }))
+        }
+        
+        actionsheetButton.append(.cancel())
+        
+        return ActionSheet(
+            title: Text("Choose a list") ,
+            message: Text("You can show all your product in My List\n and all products shared by others in Shared List") ,
+            buttons: actionsheetButton
         )
     }
 }

@@ -66,6 +66,14 @@ struct ProductCellView: View {
                     .frame(height: 88)
                     .opacity(product.expiry.polite == "Expired" ? 0.6 : 0)
             }
+            .contextMenu {
+                Button {
+                    print("share product: \(product.name)")
+                    // open share view
+                } label: {
+                    Label("Share", systemImage: "square.and.arrow.up")
+                }
+            }
     }
 }
 struct ProductCellView_Previews: PreviewProvider {
