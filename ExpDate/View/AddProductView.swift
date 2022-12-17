@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CloudKit
 
 struct AddProductView: View {
     
@@ -330,17 +331,20 @@ extension AddProductView {
     func addProduct() {
         
         NotificationManager.shared.requestPermission()
+        
         let imageurl = productApiViewModel.product.images.isEmpty ? "" : productApiViewModel.product.images[0]
         
         var newProduct = ProductModel(
+            id: UUID().uuidString,
             imageurl: imageurl,
             name: productName,
             expirationDate: expirationDate,
             openDate: openedDate,
             afterOpeningExpiration: afterOpeningExpiration?.day ?? 0,
-            productCategory: selectedCategory ?? .selfCare,
+            productCategory: selectedCategory?.rawValue ?? ProductCategory.selfCare.rawValue,
             quantity: productQuantity,
-            notificationTime: notificationTime
+            notificationTime: notificationTime,
+            associatedRecord: CKRecord(recordType: "Product")
         )
         
         let notificationTime = calcNotificationTime(
@@ -351,13 +355,15 @@ extension AddProductView {
         
         print("Product\n : \(newProduct)")
         
-        productVM.addProduct(product: newProduct)
+        Task {
+            try await productVM.addProduct(product: newProduct, group: productVM.selectedGroup.name)
+            try await productVM.refresh()
+            // schedule Notification
+            NotificationManager.shared.scheduleNotification(for: newProduct)
+            // dismis
+            isPresentedAddView.toggle()
+        }
         
-        // schedule Notification
-        NotificationManager.shared.scheduleNotification(for: newProduct)
-        
-        // dismis
-        isPresentedAddView.toggle()
     }
     
     func showAlert(title: String) {

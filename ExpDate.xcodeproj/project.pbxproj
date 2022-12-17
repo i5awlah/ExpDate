@@ -34,6 +34,8 @@
 		90917723294607FA00392CAC /* CloudViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90917722294607FA00392CAC /* CloudViewModel.swift */; };
 		9091772529463E5E00392CAC /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9091772429463E5E00392CAC /* NotificationManager.swift */; };
 		90917727294684DE00392CAC /* ProductAPIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90917726294684DE00392CAC /* ProductAPIViewModel.swift */; };
+		9091772F294B1C0B00392CAC /* CloudSharingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9091772E294B1C0B00392CAC /* CloudSharingView.swift */; };
+		90917733294DCFEF00392CAC /* ProductGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90917732294DCFEF00392CAC /* ProductGroup.swift */; };
 		E07743632941BE14009E1A25 /* ProductCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07743622941BE14009E1A25 /* ProductCellView.swift */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +68,9 @@
 		90917722294607FA00392CAC /* CloudViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudViewModel.swift; sourceTree = "<group>"; };
 		9091772429463E5E00392CAC /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		90917726294684DE00392CAC /* ProductAPIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductAPIViewModel.swift; sourceTree = "<group>"; };
+		9091772E294B1C0B00392CAC /* CloudSharingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSharingView.swift; sourceTree = "<group>"; };
+		90917730294B206D00392CAC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		90917732294DCFEF00392CAC /* ProductGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductGroup.swift; sourceTree = "<group>"; };
 		E07743622941BE14009E1A25 /* ProductCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCellView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,6 +113,7 @@
 		909176A7293F297D00392CAC /* ExpDate */ = {
 			isa = PBXGroup;
 			children = (
+				90917730294B206D00392CAC /* Info.plist */,
 				909176B8293F36A600392CAC /* Model */,
 				909176B9293F36AC00392CAC /* ViewModel */,
 				909176B7293F369C00392CAC /* View */,
@@ -141,6 +147,7 @@
 				909176C0293F373800392CAC /* EditProductView.swift */,
 				909176BC293F371400392CAC /* MembersView.swift */,
 				5404DC2829407D8F0076FAA1 /* MemberCell.swift */,
+				9091772E294B1C0B00392CAC /* CloudSharingView.swift */,
 				2CCC5391294073660006BE86 /* Shared */,
 				909176AC293F297F00392CAC /* Assets.xcassets */,
 			);
@@ -150,6 +157,7 @@
 		909176B8293F36A600392CAC /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				90917732294DCFEF00392CAC /* ProductGroup.swift */,
 				909176CD293F41AD00392CAC /* ProductModel.swift */,
 				909176E02943995000392CAC /* ProductResponse.swift */,
 			);
@@ -278,6 +286,7 @@
 				909176CA293F407600392CAC /* Extensions.swift in Sources */,
 				2CCC53902940735F0006BE86 /* CustomTextFailed.swift in Sources */,
 				909176D0294079F800392CAC /* AppViewModel.swift in Sources */,
+				90917733294DCFEF00392CAC /* ProductGroup.swift in Sources */,
 				909176D2294083C500392CAC /* DataScannerView.swift in Sources */,
 				E07743632941BE14009E1A25 /* ProductCellView.swift in Sources */,
 				909176C7293F37E200392CAC /* ScanProductView.swift in Sources */,
@@ -293,6 +302,7 @@
 				909176CE293F41AD00392CAC /* ProductModel.swift in Sources */,
 				909176A9293F297D00392CAC /* ExpDateApp.swift in Sources */,
 				90917727294684DE00392CAC /* ProductAPIViewModel.swift in Sources */,
+				9091772F294B1C0B00392CAC /* CloudSharingView.swift in Sources */,
 				909176C3293F377500392CAC /* OnoardingView.swift in Sources */,
 				9091772529463E5E00392CAC /* NotificationManager.swift in Sources */,
 				909176BD293F371400392CAC /* MembersView.swift in Sources */,
@@ -425,6 +435,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ExpDate/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app needs camera access to scan a product's barcode and expiry date";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -464,6 +475,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ExpDate/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "The app needs camera access to scan a product's barcode and expiry date";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;

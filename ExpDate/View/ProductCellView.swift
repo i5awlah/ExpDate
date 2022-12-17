@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProductCellView: View {
     var valueProgress: Double {
-        let dayLeft = Double (product.recordCreationDate?.diff_day ?? 0) * -1
+        let dayLeft = Double (product.associatedRecord.creationDate?.diff_day ?? 0) * -1
         let total = Double (product.expiry.diff_day) + dayLeft
         return (dayLeft * 100) / total
     }
@@ -65,14 +65,6 @@ struct ProductCellView: View {
                     .fill(Color.white)
                     .frame(height: 88)
                     .opacity(product.expiry.polite == "Expired" ? 0.6 : 0)
-            }
-            .contextMenu {
-                Button {
-                    print("share product: \(product.name)")
-                    // open share view
-                } label: {
-                    Label("Share", systemImage: "square.and.arrow.up")
-                }
             }
     }
 }

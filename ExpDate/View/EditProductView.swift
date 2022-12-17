@@ -102,14 +102,16 @@ extension EditProductView {
         NotificationManager.shared.requestPermission()
         
         var productUpdated = ProductModel(
+            id: product.id,
             imageurl: product.imageurl,
             name: productName,
             expirationDate: expirationDate,
             openDate: openedDate,
             afterOpeningExpiration: afterOpeningExpiration?.day ?? 0,
-            productCategory: selectedCategory ?? .selfCare,
+            productCategory: selectedCategory?.rawValue ?? ProductCategory.selfCare.rawValue,
             quantity: productQuantity,
-            notificationTime: notificationTime
+            notificationTime: notificationTime,
+            associatedRecord: product.associatedRecord
         )
         
         let notificationTime = calcNotificationTime(
@@ -118,9 +120,7 @@ extension EditProductView {
         
         productUpdated.notificationTime = notificationTime ?? productUpdated.expiry
         
-        if let recordId = product.recordId {
-            productVM.updateProduct(recordId: recordId, updatedItem: productUpdated)
-        }
+        productVM.updateProduct(updatedItem: productUpdated)
         
         // cancelNotification then selschedule Notification
         NotificationManager.shared.cancelNotification(for: productUpdated)
@@ -128,6 +128,8 @@ extension EditProductView {
         
         // dismis
         dismiss()
+        
+        
     }
 }
 

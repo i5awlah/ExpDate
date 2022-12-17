@@ -8,21 +8,200 @@
 import Foundation
 import CloudKit
 
+@MainActor
 class ProductViewModel: ObservableObject {
     
-    private var database: CKDatabase
+    // MARK: - Error
+
+    enum ViewModelError: Error {
+        case invalidRemoteShare
+    }
+
+    // MARK: - State
+
+    enum State {
+        case loading
+        case loaded(privateGroups: [ProductGroup], sharedGroups: [ProductGroup])
+        case error(Error)
+    }
+
+    // MARK: - Properties
+
+    /// State directly observable by our view.
+    @Published private(set) var state: State = .loading
+        /// Use the specified iCloud container ID, which should also be present in the entitlements file.
+    lazy var container = CKContainer(identifier: "iCloud.com.khawlah.ExpDate")
+    /// This project uses the user's private database.
+    private lazy var database = container.privateCloudDatabase
     
+    @Published var privateProducts: [ProductGroup] = []
+    @Published var sharedProducts: [ProductGroup] = []
     @Published var selectedCategory: ProductCategory = .all
+    @Published var selectedGroup: ProductGroup = ProductGroup(zone: CKRecordZone(zoneName: "My List"), products: [])
     
-    @Published var products: [ProductModel] = []
     
-    init() {
-        let container = CKContainer(identifier: "iCloud.com.khawlah.ExpDate")
-        self.database = container.privateCloudDatabase
-        
-        fetchProducts()
+    // MARK: - Init
+
+    nonisolated init() {}
+
+    /// Initializer to provide explicit state (e.g. for previews).
+    init(state: State) {
+        self.state = state
     }
     
+    // MARK: - API
+
+    /// Fetches products from the remote databases and updates local state.
+    
+    func refresh() async throws {
+        state = .loading
+        do {
+            let (privateProducts, sharedProducts) = try await fetchPrivateAndSharedProducts()
+            print(privateProducts.count)
+            print(sharedProducts.count)
+            
+            if let firstGroup = privateProducts.filter({ $0.name == selectedGroup.name }).first {
+                print("firstGroup")
+                selectedGroup = firstGroup
+            }
+            
+            self.privateProducts = privateProducts
+            self.sharedProducts = sharedProducts
+            //            if selectedCategory == .all {
+            //                self.privateProducts = privateProducts
+            //                self.sharedProducts = sharedProducts
+            //            } else {
+            //                self.privateProducts = privateProducts.filter({ $0.productCategory == selectedCategory.rawValue})
+            //                self.sharedProducts = sharedProducts.filter({ $0.productCategory == selectedCategory.rawValue})
+            //            }
+            state = .loaded(privateGroups: privateProducts, sharedGroups: sharedProducts)
+        } catch {
+            state = .error(error)
+        }
+    }
+    /// Fetches both private and shared products in parallel.
+    /// - Returns: A tuple containing separated private and shared products.
+    func fetchPrivateAndSharedProducts() async throws -> (private: [ProductGroup], shared: [ProductGroup]) {
+        // Determine zones for each set of contacts.
+        // In the Private DB, we want to ignore the default zone.
+        let privateZones = try await database.allRecordZones()
+            .filter { $0.zoneID != CKRecordZone.default().zoneID }
+        let sharedZones = try await container.sharedCloudDatabase.allRecordZones()
+
+        // This will run each of these operations in parallel.
+        async let privateProducts = fetchProducts(scope: .private, in: privateZones)
+        async let sharedProducts = fetchProducts(scope: .shared, in: sharedZones)
+
+        return (private: try await privateProducts, shared: try await sharedProducts)
+    }
+    
+    /// Adds a new Product to the database.
+    ///  - Parameters:
+    ///   - product: ProductModel
+    ///   - group: Group name the Product should belong to.
+    func addProduct(product: ProductModel, group: String) async throws {
+        do {
+            // Ensure zone exists first.
+            let zone = CKRecordZone(zoneName: group)
+            try await database.save(zone)
+            
+            let id = CKRecord.ID(zoneID: zone.zoneID)
+            let productRecord = CKRecord(recordType: "Product", recordID: id)
+            productRecord.setValuesForKeys(product.toDictonary())
+
+            try await database.save(productRecord)
+        } catch {
+            debugPrint("ERROR: Failed to save new Contact: \(error)")
+            throw error
+        }
+    }
+    
+    func addNewList(group: String) async throws {
+        let zone = CKRecordZone(zoneName: group)
+        try await database.save(zone)
+    }
+
+    /// Fetches an existing `CKShare` on a group zone, or creates a new one in preparation to share a group of products with another user.
+    /// - Parameters:
+    ///   - contactGroup: Group of Products to share.
+    ///   - completionHandler: Handler to process a `success` or `failure` result.
+    func fetchOrCreateShare(productGroup: ProductGroup) async throws -> (CKShare, CKContainer) {
+        guard let existingShare = productGroup.zone.share else {
+            let share = CKShare(recordZoneID: productGroup.zone.zoneID)
+            share[CKShare.SystemFieldKey.title] = productGroup.name
+            _ = try await database.modifyRecords(saving: [share], deleting: [])
+            return (share, container)
+        }
+
+        guard let share = try await database.record(for: existingShare.recordID) as? CKShare else {
+            throw ViewModelError.invalidRemoteShare
+        }
+
+        return (share, container)
+    }
+
+    // MARK: - Private
+
+    /// Fetches grouped products for a given set of zones in a given database scope.
+    /// - Parameters:
+    ///   - scope: Database scope to fetch from.
+    ///   - zones: Record zones to fetch products from.
+    /// - Returns: An array of grouped products (a zone/group name and an array of `Product Model` objects).
+    private func fetchProducts(
+        scope: CKDatabase.Scope,
+        in zones: [CKRecordZone]
+    ) async throws -> [ProductGroup] {
+        guard !zones.isEmpty else {
+            return []
+        }
+
+        let database = container.database(with: scope)
+        var allProducts: [ProductGroup] = []
+
+        // Inner function retrieving and converting all product records for a single zone.
+        @Sendable func contactsInZone(_ zone: CKRecordZone) async throws -> [ProductModel] {
+            if zone.zoneID == CKRecordZone.default().zoneID {
+                return []
+            }
+
+            var allProducts: [ProductModel] = []
+
+            /// `recordZoneChanges` can return multiple consecutive changesets before completing, so
+            /// we use a loop to process multiple results if needed, indicated by the `moreComing` flag.
+            var awaitingChanges = true
+            /// After each loop, if more changes are coming, they are retrieved by using the `changeToken` property.
+            var nextChangeToken: CKServerChangeToken? = nil
+
+            while awaitingChanges {
+                let zoneChanges = try await database.recordZoneChanges(inZoneWith: zone.zoneID, since: nextChangeToken)
+                let contacts = zoneChanges.modificationResultsByID.values
+                    .compactMap { try? $0.get().record }
+                    .compactMap { ProductModel(record: $0) }
+                allProducts.append(contentsOf: contacts)
+
+                awaitingChanges = zoneChanges.moreComing
+                nextChangeToken = zoneChanges.changeToken
+            }
+
+            return allProducts
+        }
+
+        // Using this task group, fetch each zone's contacts in parallel.
+        try await withThrowingTaskGroup(of: (CKRecordZone, [ProductModel]).self) { group in
+            for zone in zones {
+                group.addTask {
+                    (zone, try await contactsInZone(zone))
+                }
+            }
+
+            // As each result comes back, append it to a combined array to finally return.
+            for try await (zone, contactsResult) in group {
+                allProducts.append(ProductGroup(zone: zone, products: contactsResult))
+            }
+        }
+
+        return allProducts
+    }
     
     func deleteProduct(_ recordId: CKRecord.ID) {
         database.delete(withRecordID: recordId) { deletedRecordID, error in
@@ -30,13 +209,12 @@ class ProductViewModel: ObservableObject {
                 print("Error: \(error.localizedDescription)")
             } else {
                 print("deleted successfully")
-                self.fetchProducts()
             }
         }
     }
     
-    func updateProduct(recordId: CKRecord.ID, updatedItem: ProductModel) {
-        database.fetch(withRecordID: recordId) { record, error in
+    func updateProduct(updatedItem: ProductModel) {
+        database.fetch(withRecordID: updatedItem.associatedRecord.recordID) { record, error in
             
             if let record = record, error == nil {
                 
@@ -49,72 +227,14 @@ class ProductViewModel: ObservableObject {
                         print(error.localizedDescription)
                     } else {
                         print("updated successfully")
-                        self.fetchProducts()
-                    }
-                }
-            }
-        }
-        
-    }
-    
-    func addProduct(product: ProductModel) {
-        let record = CKRecord(recordType: "Product")
-        record.setValuesForKeys(product.toDictonary())
-        
-        // save record in database
-        database.save(record) { newRecord, error in
-            if let error = error {
-                print(error.localizedDescription)
-            } else {
-                if let newRecord = newRecord {
-                    print("added successfully")
-                    if let product = ProductModel.fromRecord(newRecord) {
-                        DispatchQueue.main.async {
-                            self.selectedCategory = .all
-                            self.products.append(product)
-                            self.products = self.products.sorted(by: {$0.expiry < $1.expiry})
+                        Task {
+                            try await self.refresh()
                         }
                     }
                 }
             }
         }
-    }
-    
-    func fetchProducts() {
-        var products: [ProductModel] = []
         
-        var predicate = NSPredicate(value: true)
-        if selectedCategory != .all {
-            predicate = NSPredicate(format: "productCategory = %@", argumentArray: [selectedCategory.rawValue])
-        }
-        
-        let query = CKQuery(recordType: "Product", predicate: predicate)
-        query.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-        database.fetch(withQuery: query) { result in
-            switch(result) {
-            case .success((let result)):
-                result.matchResults.compactMap { $0.1 }
-                    .forEach {
-                        switch $0 {
-                        case .success(let record):
-                            print("Record: \(record)")
-                            if let product = ProductModel.fromRecord(record) {
-                                products.append(product)
-                            }
-                        case .failure(let error):
-                            print("Error: \(error.localizedDescription)")
-                        }
-                    }
-                DispatchQueue.main.async {
-                    self.products = products.sorted(by: {$0.expiry < $1.expiry})
-                }
-                
-            case .failure(let error):
-                print("error: \(error.localizedDescription)")
-            }
-        }
     }
-    
-    
 }
 
