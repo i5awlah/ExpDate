@@ -10,7 +10,6 @@ import CloudKit
 
 struct ProductView: View {
     @State private var isListActionSheetPresented = false
-    @State private var isPrivateList = true
     
     @StateObject var productVM = ProductViewModel()
     @StateObject private var vm = AppViewModel()
@@ -45,7 +44,7 @@ struct ProductView: View {
                 
                 scanButton
                     .padding(.trailing)
-                    .opacity(isPrivateList ? 1 : 0)
+                    .opacity(productVM.isPrivateList ? 1 : 0)
                 
                 if isPresentedScan {
                     ScanProductView(isPresentedScan: $isPresentedScan, isPresentedAddView: $isPresentedAddView)
@@ -61,8 +60,11 @@ struct ProductView: View {
                 Button("Add", action: {
                     if !listName.isEmpty {
                         Task {
-                            try await productVM.addNewList(group: listName)
-                            try await productVM.refresh()
+                            productVM.addNewList(group: listName) {_, _ in
+                                Task {
+                                    try await productVM.refresh()
+                                }
+                            }
                             listName = ""
                         }
                     }
@@ -79,6 +81,9 @@ struct ProductView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
+                    progressView
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
                     shareButton
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -91,11 +96,9 @@ struct ProductView: View {
                 isPresentedAddView.toggle()
             }
         })
-        .onAppear {
-            Task {
-                try await productVM.refresh()
-            }
-        }
+        .onChange(of: productVM.selectedCategory, perform: { _ in
+            productVM.sortAndFilter()
+        })
         .environmentObject(vm)
         .environmentObject(productVM)
     }
@@ -135,31 +138,24 @@ extension ProductView {
     
     private var contentView: some View {
         List {
-            if isPrivateList {
-                if productVM.selectedCategory == .all {
-                    ForEach(productVM.selectedGroup.products.sorted(by: { $0.expiry < $1.expiry })) { product in
-                        productRowView(for: product)
-                    }
-                    .onDelete(perform: deleteProduct)
-                } else {
-                    ForEach(productVM.selectedGroup.products.sorted(by: { $0.expiry < $1.expiry }).filter({ $0.productCategory == productVM.selectedCategory.rawValue })) { product in
-                        productRowView(for: product)
-                    }
-                    .onDelete(perform: deleteProduct)
-                }
-                
-                
-            } else {
-                
-                if productVM.selectedCategory == .all {
-                    ForEach(productVM.selectedGroup.products.sorted(by: { $0.expiry < $1.expiry })) { product in
-                        productRowView(for: product)
-                    }
-                } else {
-                    ForEach(productVM.selectedGroup.products.sorted(by: { $0.expiry < $1.expiry }).filter({ $0.productCategory == productVM.selectedCategory.rawValue })) { product in
-                        productRowView(for: product)
-                    }
-                }
+            ForEach(productVM.filterdProducts) { product in
+                productRowView(for: product)
+                    .swipeActions(content: {
+                        Button(role: .destructive) {
+                            showingDeleteAlert = true
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                                .labelStyle(.iconOnly)
+                        }
+                    })
+                    .confirmationDialog("Are you sure to delete \(product.name)?", isPresented: $showingDeleteAlert, actions: {
+                        Button {
+                            deleteProduct(product)
+                        } label: {
+                            Text("Delete")
+                        }
+
+                    }, message: { Text("Are you sure to delete \(product.name)?") })
             }
         }
         .scrollContentBackground(.hidden)
@@ -214,7 +210,26 @@ extension ProductView {
             Image(systemName: "person.2.fill")
                 .foregroundColor(.black)
         }
-        .opacity(isPrivateList ? 1 : 0)
+        .opacity(productVM.isPrivateList ? 1 : 0)
+    }
+    
+    /// This progress view will display when either the ViewModel is loading, or a share is processing.
+    var progressView: some View {
+        let showProgress: Bool = {
+            if case .loading = productVM.state {
+                return true
+            } else if isProcessingShare {
+                return true
+            }
+
+            return false
+        }()
+
+        return Group {
+            if showProgress {
+                ProgressView()
+            }
+        }
     }
     
     var listButton: some View {
@@ -229,23 +244,23 @@ extension ProductView {
     var listActionSheet: ActionSheet {
         var actionsheetButton: [ActionSheet.Button] = []
         
-        if productVM.privateProducts.count == 0 {
-            actionsheetButton.append(.default(Text(productVM.selectedGroup.name), action: {
-                isPrivateList = true
-            }))
-        }
-
         for privateGroup in productVM.privateProducts {
             actionsheetButton.append(.default(Text(privateGroup.name), action: {
                 productVM.selectedGroup = privateGroup
-                isPrivateList = true
+                productVM.isPrivateList = true
+                Task {
+                    try await productVM.refresh()
+                }
             }))
         }
         
         for sharedGroup in productVM.sharedProducts {
             actionsheetButton.append(.default(Text(sharedGroup.name), action: {
                 productVM.selectedGroup = sharedGroup
-                isPrivateList = false
+                productVM.isPrivateList = false
+                Task {
+                    try await productVM.refresh()
+                }
             }))
         }
         
@@ -305,10 +320,11 @@ extension ProductView {
         }
     }
     
-    func deleteProduct(_ indexSet: IndexSet) {
-        guard let index = indexSet.first else { return }
-        let item = productVM.selectedGroup.products[index]
-        productVM.deleteProduct(item.associatedRecord.recordID)
+    func deleteProduct(_ product: ProductModel) {
+        productVM.deleteProduct(product.associatedRecord.recordID)
+        Task {
+            try await productVM.refresh()
+        }
     }
 }
 

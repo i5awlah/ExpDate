@@ -103,7 +103,7 @@ extension OnbordingView {
                 .padding(10)
         }
         .padding(.top, 1)
-        .padding(.trailing ,30)
+        .padding(.trailing)
         .frame(maxWidth: .infinity, alignment: .trailing)
         .frame(maxHeight: .infinity, alignment: .top)
         .foregroundColor(.secondary)

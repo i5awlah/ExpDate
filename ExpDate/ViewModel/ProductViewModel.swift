@@ -8,7 +8,7 @@
 import Foundation
 import CloudKit
 
-@MainActor
+
 class ProductViewModel: ObservableObject {
     
     // MARK: - Error
@@ -37,16 +37,29 @@ class ProductViewModel: ObservableObject {
     @Published var privateProducts: [ProductGroup] = []
     @Published var sharedProducts: [ProductGroup] = []
     @Published var selectedCategory: ProductCategory = .all
-    @Published var selectedGroup: ProductGroup = ProductGroup(zone: CKRecordZone(zoneName: "My List"), products: [])
     
+    @Published var selectedGroup: ProductGroup = ProductGroup(zone: CKRecordZone(zoneName: "-"), products: [])
+    @Published var isPrivateList = true
+    
+    @Published var allProducts: [ProductModel] = []
+    @Published var filterdProducts: [ProductModel] = []
     
     // MARK: - Init
 
-    nonisolated init() {}
-
-    /// Initializer to provide explicit state (e.g. for previews).
-    init(state: State) {
-        self.state = state
+    init() {
+        addNewList(group: "My List") { returnedRecordZone, returnedError in
+            if let returnedRecordZone {
+                DispatchQueue.main.async {
+                    print("selectedGroup: \(self.selectedGroup)")
+                    self.selectedGroup = ProductGroup(zone: returnedRecordZone, products: [])
+                    Task {
+                        try await self.refresh()
+                    }
+                }
+            } else if let returnedError {
+                print("Error when creating new zone: \(returnedError.localizedDescription)")
+            }
+        }
     }
     
     // MARK: - API
@@ -54,31 +67,66 @@ class ProductViewModel: ObservableObject {
     /// Fetches products from the remote databases and updates local state.
     
     func refresh() async throws {
-        state = .loading
+        DispatchQueue.main.async {
+            self.state = .loading
+        }
         do {
             let (privateProducts, sharedProducts) = try await fetchPrivateAndSharedProducts()
             print(privateProducts.count)
             print(sharedProducts.count)
             
-            if let firstGroup = privateProducts.filter({ $0.name == selectedGroup.name }).first {
-                print("firstGroup")
-                selectedGroup = firstGroup
+            DispatchQueue.main.async {
+                
+                self.privateProducts = privateProducts
+                self.sharedProducts = sharedProducts
+                
+                self.refreshSelectedGroup()
+                
+                // update state
+                self.state = .loaded(privateGroups: privateProducts, sharedGroups: sharedProducts)
             }
             
-            self.privateProducts = privateProducts
-            self.sharedProducts = sharedProducts
-            //            if selectedCategory == .all {
-            //                self.privateProducts = privateProducts
-            //                self.sharedProducts = sharedProducts
-            //            } else {
-            //                self.privateProducts = privateProducts.filter({ $0.productCategory == selectedCategory.rawValue})
-            //                self.sharedProducts = sharedProducts.filter({ $0.productCategory == selectedCategory.rawValue})
-            //            }
-            state = .loaded(privateGroups: privateProducts, sharedGroups: sharedProducts)
         } catch {
-            state = .error(error)
+            DispatchQueue.main.async {
+                self.state = .error(error)
+            }
         }
     }
+    
+    func refreshSelectedGroup() {
+        // refresh selected group
+        for group in privateProducts {
+            if self.selectedGroup.id == group.id {
+                self.selectedGroup = group
+                self.allProducts = group.products
+                self.filterdProducts = group.products
+                self.isPrivateList = true
+            }
+        }
+        
+        for group in sharedProducts {
+            if self.selectedGroup.id == group.id {
+                self.selectedGroup = group
+                self.allProducts = group.products
+                self.filterdProducts = group.products
+                self.isPrivateList = false
+            }
+        }
+        self.sortAndFilter()
+    }
+    
+    func sortAndFilter() {
+        // filter
+        if self.selectedCategory == .all {
+            self.filterdProducts = self.allProducts
+        } else {
+            self.filterdProducts = self.allProducts.filter({ $0.productCategory == self.selectedCategory.rawValue})
+        }
+        
+        // sort
+        self.filterdProducts = self.filterdProducts.sorted(by: { $0.expiry < $1.expiry })
+    }
+    
     /// Fetches both private and shared products in parallel.
     /// - Returns: A tuple containing separated private and shared products.
     func fetchPrivateAndSharedProducts() async throws -> (private: [ProductGroup], shared: [ProductGroup]) {
@@ -100,6 +148,8 @@ class ProductViewModel: ObservableObject {
     ///   - product: ProductModel
     ///   - group: Group name the Product should belong to.
     func addProduct(product: ProductModel, group: String) async throws {
+        let scope: CKDatabase.Scope = isPrivateList ? .private  : .shared
+        let database = container.database(with: scope)
         do {
             // Ensure zone exists first.
             let zone = CKRecordZone(zoneName: group)
@@ -116,9 +166,10 @@ class ProductViewModel: ObservableObject {
         }
     }
     
-    func addNewList(group: String) async throws {
+    
+    func addNewList(group: String, completionHandler: @escaping (CKRecordZone?, Error?) -> Void) {
         let zone = CKRecordZone(zoneName: group)
-        try await database.save(zone)
+        database.save(zone, completionHandler: completionHandler)
     }
 
     /// Fetches an existing `CKShare` on a group zone, or creates a new one in preparation to share a group of products with another user.
@@ -204,6 +255,8 @@ class ProductViewModel: ObservableObject {
     }
     
     func deleteProduct(_ recordId: CKRecord.ID) {
+        let scope: CKDatabase.Scope = isPrivateList ? .private  : .shared
+        let database = container.database(with: scope)
         database.delete(withRecordID: recordId) { deletedRecordID, error in
             if let error = error {
                 print("Error: \(error.localizedDescription)")
@@ -214,17 +267,18 @@ class ProductViewModel: ObservableObject {
     }
     
     func updateProduct(updatedItem: ProductModel) {
+        
+        let scope: CKDatabase.Scope = isPrivateList ? .private  : .shared
+        let database = container.database(with: scope)
+        
         database.fetch(withRecordID: updatedItem.associatedRecord.recordID) { record, error in
-            
             if let record = record, error == nil {
-                
                 //update your record here
                 record.setValuesForKeys(updatedItem.toDictonary())
-                
                 // save record in database
-                self.database.save(record) { returnRecord, error in
+                database.save(record) { returnRecord, error in
                     if let error = error {
-                        print(error.localizedDescription)
+                        print("ERRORR::\(error.localizedDescription)")
                     } else {
                         print("updated successfully")
                         Task {
@@ -234,7 +288,6 @@ class ProductViewModel: ObservableObject {
                 }
             }
         }
-        
     }
 }
 
