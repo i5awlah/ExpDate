@@ -236,7 +236,7 @@ extension ProductView {
         Button {
             self.isListActionSheetPresented.toggle()
         } label: {
-            Label("Lists", systemImage:"line.3.horizontal" )
+            Label("Lists", systemImage:"text.badge.plus" )
                 .foregroundColor(.black)
         }
     }
