@@ -34,17 +34,16 @@ struct ProductView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .bottomTrailing) {
+            ZStack {
                 VStack {
                     categories
                         .padding(.top, 20)
-                    contentView
-                    Spacer()
+                    VStack(spacing: 0) {
+                        contentView
+                        scanButton
+                            .opacity(productVM.isPrivateList ? 1 : 0)
+                    }
                 }
-                
-                scanButton
-                    .padding(.trailing)
-                    .opacity(productVM.isPrivateList ? 1 : 0)
                 
                 if isPresentedScan {
                     ScanProductView(isPresentedScan: $isPresentedScan, isPresentedAddView: $isPresentedAddView)
@@ -140,6 +139,7 @@ extension ProductView {
         List {
             ForEach(productVM.filterdProducts) { product in
                 productRowView(for: product)
+                    .frame(height: 80)
                     .swipeActions(content: {
                         Button(role: .destructive) {
                             showingDeleteAlert = true
@@ -157,6 +157,7 @@ extension ProductView {
 
                     }, message: { Text("Are you sure to delete \(product.name)?") })
             }
+            .listRowSeparator(.hidden)
         }
         .scrollContentBackground(.hidden)
         .listStyle(.plain)
@@ -177,38 +178,37 @@ extension ProductView {
     }
     
     private func productRowView(for product: ProductModel) -> some View {
-        HStack {
-            ProductCellView(product: product)
-                .listRowSeparator(.hidden)
-                .background(
-                    NavigationLink("", destination: EditProductView(product: product))
+        ProductCellView(product: product)
+            .background(
+                NavigationLink("", destination: EditProductView(product: product))
                     .opacity(0)
-                )
-        }
+            )
+        
     }
     
     var scanButton: some View {
         Button {
             scanButtonPressed()
         } label: {
-            Circle()
-                .fill(Color.accentColor)
-                .frame(width:82 , height:82)
-                .overlay(){
-                    Image(systemName: "barcode.viewfinder")
-                        .foregroundColor(Color.white)
-                        .font(.system(size: 30))
-                }
-                
+            HStack {
+                Image(systemName: "barcode.viewfinder")
+                Text("Scan")
+            }
+            .font(.title3)
         }
+        .padding(.top, 8)
+        .padding(.leading)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .overlay(alignment: .top, content: {
+            Divider()
+        })
     }
     
     var shareButton: some View {
         Button {
             Task { try? await shareGroup(productVM.selectedGroup) }
         } label: {
-            Image(systemName: "person.2.fill")
-                .foregroundColor(.black)
+            Image(systemName: "square.and.arrow.up")
         }
         .opacity(productVM.isPrivateList ? 1 : 0)
     }
@@ -236,8 +236,7 @@ extension ProductView {
         Button {
             self.isListActionSheetPresented.toggle()
         } label: {
-            Label("Lists", systemImage:"text.badge.plus" )
-                .foregroundColor(.black)
+            Label("Lists", systemImage:"list.bullet" )
         }
     }
     
