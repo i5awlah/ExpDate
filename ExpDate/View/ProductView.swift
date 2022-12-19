@@ -26,6 +26,8 @@ struct ProductView: View {
     @State private var activeShare: CKShare?
     @State private var activeContainer: CKContainer?
     
+    // to delete product
+    @State private var productDeleted: ProductModel?
     @State private var showingDeleteAlert = false
     
     // for add new list
@@ -139,20 +141,24 @@ extension ProductView {
                     .frame(height: 80)
                     .swipeActions(content: {
                         Button(role: .destructive) {
+                            productDeleted = product
                             showingDeleteAlert = true
                         } label: {
                             Label("Delete", systemImage: "trash")
                                 .labelStyle(.iconOnly)
                         }
                     })
-                    .confirmationDialog("Are you sure to delete \(product.name)?", isPresented: $showingDeleteAlert, actions: {
-                        Button {
-                            deleteProduct(product)
+                    .alert("Are you sure to delete \(productDeleted?.name ?? "")?", isPresented: $showingDeleteAlert, actions: {
+                        Button("Cancel", role: .cancel, action: {})
+
+                        Button(role: .destructive) {
+                            if let productDeleted {
+                                deleteProduct(productDeleted)
+                            }
                         } label: {
                             Text("Delete")
                         }
-
-                    }, message: { Text("Are you sure to delete \(product.name)?") })
+                    })
             }
             .listRowSeparator(.hidden)
         }
