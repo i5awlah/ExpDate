@@ -18,18 +18,13 @@ struct AddProductView: View {
     @Binding var isPresentedAddView: Bool
     
     @State var productName: String = ""
-    @State var expirationDateStr: String = ""
-    @State var openedDateStr: String = ""
     
     @State var expirationDate: Date = .now
     @State var openedDate: Date = .now
     
-    @State var inputDate = Date()
-    
     @State var productQuantity = 1
     @State var notificationTime: Date = Date()
-    @State var showPicker = false
-    @State var textfailddate: String = "ExpirationDate"
+    
     let startingDate:Date = Date()
     let endingDate:Date = Calendar.current.date(from: DateComponents(year: 10000)) ?? Date()
     // can't add an expired product.
@@ -45,26 +40,23 @@ struct AddProductView: View {
     
     var body: some View {
         
-        ZStack(alignment: .bottom) {
-            ScrollView {
-                VStack(spacing: 20) {
+        ZStack {
+            
+            Form {
+                VStack {
                     productImage
-                    textFields
-                    menus
-                    additonInfo
-                    addButton
+                    
+                    CustomTextField(label: "Product Name", placeholder: "", text: $productName)
+                        .padding(.bottom)
                 }
-                .padding(.horizontal, 30)
-                .padding(.top)
+                expirationDateField
+                openDateField
+                afterOpeningExpirationMenu
+                productCategoryMenu
+                productQuantityStepper
+                reminedMeBeforPicker
+                notificationTimePicker
             }
-            
-            
-            if showPicker {
-                DatePicker("", selection: $inputDate, in: startingDate...endingDate, displayedComponents: .date)
-                    .datePickerStyle(.wheel)
-                    .background(Color(uiColor: .systemGray5))
-            }
-            
             
             if isPresentedScan {
                 ScanProductView(isPresentedScan: $isPresentedScan, isPresentedAddView: .constant(false))
@@ -85,7 +77,6 @@ struct AddProductView: View {
         .onChange(of: vm.expDate, perform: { newValue in
             if let expDate = vm.expDate {
                 expirationDate = expDate.toDate()
-                expirationDateStr = expirationDate.toString
             }
         })
         // show alert if there is an error while user enter inputs
@@ -94,6 +85,11 @@ struct AddProductView: View {
         }
         .navigationTitle("Add Product")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            Button("Add") {
+                addButtonPressed()
+            }
+        }
     }
     
     var productImage: some View {
@@ -120,166 +116,131 @@ struct AddProductView: View {
         .padding(.bottom)
     }
     
-    var textFields: some View {
-        VStack(spacing: 25) {
-            CustomTextField(label: "Product Name", placeholder: "", text: $productName)
-            CustomTextField(label: "Expiration Date", placeholder: "", text: $expirationDateStr)
-                .overlay(alignment: .trailing, content: {
-                    Button {
-                        vm.scanType = .text
-                        withAnimation(.spring()) {
-                            isPresentedScan.toggle()
-                        }
-                    } label: {
-                        Image(systemName: "barcode.viewfinder")
-                            .font(.headline)
-                    }
-                    .padding(.trailing)
-                    
-                })
-                .onTapGesture {
-                    textfailddate = "ExpirationDate"
-                    showPicker.toggle()
+    var expirationDateField: some View {
+        DatePicker(
+            "Expiration Date",
+            selection: $expirationDate,
+            in: startingDate...endingDate,
+            displayedComponents: .date)
+        .overlay(alignment: .leading) {
+            Button {
+                vm.scanType = .text
+                withAnimation(.spring()) {
+                    isPresentedScan.toggle()
                 }
-                .onChange(of: inputDate, perform: { _ in
-                    
-                    if textfailddate == "ExpirationDate" {
-                        expirationDate = inputDate
-                        expirationDateStr = inputDate.toString
-                    } else {
-                        openedDate = inputDate
-                        openedDateStr = inputDate.toString
-                    }
-                    if !showPicker {
-                        inputDate = Date()
-                    }
-                    
-                    
-                })
-            
-            // Opened Date Feild
-            CustomTextField(label: "Opened Date", placeholder: "", text: $openedDateStr)
-                .onTapGesture {
-                    textfailddate = "Opened Date"
-                    showPicker.toggle()
-                }
+            } label: {
+                Image(systemName: "barcode.viewfinder")
+                    .font(.title3)
+            }
+            .padding(.leading, 125)
         }
+        .padding(.vertical, 2)
     }
     
-    var menus: some View {
-        VStack {
-            // After Opening Expiration Menu
-            VStack(spacing: 10) {
-                Text("After Opening Expiration")
-                    .bold()
-                    .font(.subheadline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Menu {
-                    ForEach(afterOpeningExpirationList.allCases, id: \.self) { item in
-                        Button(item.rawValue) {
-                            self.afterOpeningExpiration = item
-                        }
-                    }
-                } label: {
-                    VStack(spacing: 10){
-                        HStack{
-                            Text(afterOpeningExpiration?.rawValue ?? "none")
-                                .foregroundColor((afterOpeningExpiration == nil) ? .gray : .black)
-                            Spacer()
-                            Image(systemName: "chevron.down")
-                                .foregroundColor(Color.black)
-                                .font(Font.system(size: 20, weight: .bold))
-                        }
-                        .padding(.horizontal)
-                    }
-                }
-                .padding(.vertical, 7)
-                .background(Color(uiColor: .systemGray6))
-                .cornerRadius(12)
-            }
-            
-            // Product Category Menu
-            VStack(spacing: 10) {
-                Text("Product Category")
-                    .bold()
-                    .font(.subheadline)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Menu {
-                    ForEach(ProductCategory.allCases, id: \.self) { category in
-                        if category != .all {
-                            Button(category.rawValue) {
-                                self.selectedCategory = category
-                            }
-                        }
-                    }
-                } label: {
-                    VStack(spacing: 10){
-                        HStack{
-                            Text((selectedCategory?.rawValue) ?? "selecct product category")
-                                .foregroundColor(selectedCategory == nil ? .gray : .black)
-                            Spacer()
-                            Image(systemName: "chevron.down")
-                                .foregroundColor(Color.black)
-                                .font(Font.system(size: 20, weight: .bold))
-                        }
-                        .padding(.horizontal)
-                    }
-                }
-                .padding(.vertical, 7)
-                .background(Color(uiColor: .systemGray6))
-                .cornerRadius(12)
-            }
-        }
+    var openDateField: some View {
+        DatePicker("Opened Date", selection: $openedDate, displayedComponents: .date)
+        .padding(.vertical, 2)
     }
     
-    var additonInfo: some View {
-        VStack(spacing: 20) {
-            // Product Quantity Stepper
-            Stepper("Product Quantity: \(productQuantity)", value: $productQuantity, in: 1...1000)
+    var afterOpeningExpirationMenu: some View {
+        HStack(spacing: 10) {
+            Text("After Opening Expiration")
+                .bold()
+                .font(.subheadline)
+            Spacer()
+            Menu {
+                ForEach(afterOpeningExpirationList.allCases, id: \.self) { item in
+                    Button(item.rawValue) {
+                        self.afterOpeningExpiration = item
+                    }
+                }
+            } label: {
+                VStack(spacing: 10){
+                    HStack{
+                        Text(afterOpeningExpiration?.rawValue ?? "none")
+                            .foregroundColor((afterOpeningExpiration == nil) ? .gray : .black)
+                        
+                        Image(systemName: "chevron.down")
+                            .foregroundColor(Color.black)
+                            .font(Font.system(size: 12, weight: .bold))
+                    }
+                    .padding(.horizontal)
+                }
+            }
+            .padding(.vertical, 7)
+            .background(Color(uiColor: .systemGray6))
+            .cornerRadius(12)
+        }
+        .padding(.vertical, 2)
+    }
+    
+    var productCategoryMenu: some View {
+        HStack(spacing: 10) {
+            Text("Product Category")
+                .bold()
+                .font(.subheadline)
+            Spacer()
+            Menu {
+                ForEach(ProductCategory.allCases, id: \.self) { category in
+                    if category != .all {
+                        Button(category.rawValue) {
+                            self.selectedCategory = category
+                        }
+                    }
+                }
+            } label: {
+                VStack(spacing: 10){
+                    HStack{
+                        Text((selectedCategory?.rawValue) ?? "none")
+                            .foregroundColor(selectedCategory == nil ? .gray : .black)
+                        
+                        Image(systemName: "chevron.down")
+                            .foregroundColor(Color.black)
+                            .font(Font.system(size: 12, weight: .bold))
+                    }
+                    .padding(.horizontal)
+                }
+            }
+            .padding(.vertical, 7)
+            .background(Color(uiColor: .systemGray6))
+            .cornerRadius(12)
+        }
+        .padding(.vertical, 2)
+    }
+    
+    var productQuantityStepper: some View {
+        Stepper("Product Quantity: \(productQuantity)", value: $productQuantity, in: 1...1000)
+            .bold()
+            .font(.subheadline)
+            .padding(.vertical, 2)
+    }
+    
+    var reminedMeBeforPicker: some View {
+        HStack {
+            Text("Remined Me Before")
                 .bold()
                 .font(.subheadline)
             
-            // Remined Me Befor Picker
-            HStack{
-                Text("Remined Me Before")
-                    .bold()
-                    .font(.subheadline)
-                
-                Spacer()
-                Picker(
-                    selection: $selectedRemindBefore,
-                    label: Text(selectedRemindBefore.rawValue),
-                    content: {
-                        ForEach(remindBefore.allCases, id: \.self) { option in
-                            Text(option.rawValue)
-                                .tag(option)
-                        }
+            Spacer()
+            Picker(
+                selection: $selectedRemindBefore,
+                label: Text(""),
+                content: {
+                    ForEach(remindBefore.allCases, id: \.self) { option in
+                        Text(option.rawValue)
+                            .tag(option)
                     }
-                    
-                )
-                .background(Color(uiColor: .systemGray5)).cornerRadius(12)
-            }
-            
-            // Notification Time Picker
-            DatePicker("Notification Time", selection: $notificationTime, displayedComponents: .hourAndMinute)
-                .bold()
-                .font(.subheadline)
+                }
+                
+            )
         }
     }
     
-    var addButton: some View {
-        Button {
-            addButtonPressed()
-        } label: {
-            Text("Add")
-                .bold()
-                .font(.title2)
-                .frame(width: 330, height: 50)
-                .foregroundColor(.white)
-                .background(Color.accentColor)
-                .mask(RoundedRectangle(cornerRadius: 15, style: .continuous))
-        }
+    var notificationTimePicker: some View {
+        DatePicker("Notification Time", selection: $notificationTime, displayedComponents: .hourAndMinute)
+            .bold()
+            .font(.subheadline)
+            .padding(.vertical, 2)
     }
 }
 
@@ -307,16 +268,6 @@ extension AddProductView {
         // should be fill product name
         guard !productName.isEmpty else {
             showAlert(title: "A product name must be provided.")
-            return false
-        }
-        
-        // should be fill expiration Date & opened Date
-        guard !expirationDateStr.isEmpty else {
-            showAlert(title: "An expiration Date must be provided.")
-            return false
-        }
-        guard !openedDateStr.isEmpty else {
-            showAlert(title: "An opened Date must be provided.")
             return false
         }
         
