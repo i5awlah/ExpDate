@@ -79,6 +79,7 @@ struct AddProductView: View {
         .onChange(of: productApiViewModel.isFeaching, perform: { _ in
             if productApiViewModel.isFeaching {
                 productName = productApiViewModel.product.title
+                self.selectedCategory = productApiViewModel.product.toExistingCategory()
             }
         })
         .onChange(of: vm.expDate, perform: { newValue in

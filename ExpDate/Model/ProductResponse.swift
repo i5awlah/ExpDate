@@ -14,7 +14,20 @@ struct ProductResponse: Codable {
 
 // MARK: - Product
 struct Product: Codable {
-
-    let images: [String]
     let title: String
+    let images: [String]
+    let category: [String]
+}
+
+extension Product {
+    func toExistingCategory() -> ProductCategory? {
+        for category in category {
+            for productCategory in ProductCategory.allCases {
+                if category.lowercased().contains(productCategory.rawValue.lowercased()) {
+                    return productCategory
+                }
+            }
+        }
+        return nil
+    }
 }
