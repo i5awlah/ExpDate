@@ -51,9 +51,6 @@ struct ProductView: View {
                 
             }
             .sheet(isPresented: $isSharing, content: { shareView() })
-            .actionSheet(isPresented: $isListActionSheetPresented) {
-                listActionSheet
-            }
             .alert("List Name", isPresented: $showAddListAlert, actions: {
                 TextField("List Name", text: $listName)
                 Button("Add", action: {
@@ -237,6 +234,9 @@ extension ProductView {
             self.isListActionSheetPresented.toggle()
         } label: {
             Label("Lists", systemImage:"list.bullet" )
+        }
+        .actionSheet(isPresented: $isListActionSheetPresented) {
+            listActionSheet
         }
     }
     
