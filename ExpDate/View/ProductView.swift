@@ -51,6 +51,11 @@ struct ProductView: View {
                     ScanProductView(isPresentedScan: $isPresentedScan, isPresentedAddView: $isPresentedAddView)
                 }
                 
+                if productVM.accountStatus != .available {
+                    Text("You must have an iCloud account\n to add products")
+                        .multilineTextAlignment(.center)
+                }
+                
             }
             .sheet(isPresented: $isSharing, content: { shareView() })
             .alert("List Name", isPresented: $showAddListAlert, actions: {
@@ -83,9 +88,11 @@ struct ProductView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     shareButton
+                        .disabled(productVM.accountStatus != .available)
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     listButton
+                        .disabled(productVM.accountStatus != .available)
                 }
             }
         }
@@ -219,7 +226,9 @@ extension ProductView {
     /// This progress view will display when either the ViewModel is loading, or a share is processing.
     var progressView: some View {
         let showProgress: Bool = {
-            if case .loading = productVM.state {
+            if productVM.accountStatus != .available {
+                return false
+            } else if case .loading = productVM.state {
                 return true
             } else if isProcessingShare {
                 return true

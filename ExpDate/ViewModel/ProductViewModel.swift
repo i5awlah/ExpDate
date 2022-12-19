@@ -38,15 +38,19 @@ class ProductViewModel: ObservableObject {
     @Published var sharedProducts: [ProductGroup] = []
     @Published var selectedCategory: ProductCategory = .all
     
-    @Published var selectedGroup: ProductGroup = ProductGroup(zone: CKRecordZone(zoneName: "-"), products: [])
+    @Published var selectedGroup: ProductGroup = ProductGroup(zone: CKRecordZone(zoneName: "My list"), products: [])
     @Published var isPrivateList = true
     
     @Published var allProducts: [ProductModel] = []
     @Published var filterdProducts: [ProductModel] = []
     
+    @Published var accountStatus: CKAccountStatus = .noAccount
+    
     // MARK: - Init
 
     init() {
+        getiCloudStatus()
+        
         addNewList(group: "My List") { returnedRecordZone, returnedError in
             if let returnedRecordZone {
                 DispatchQueue.main.async {
@@ -59,6 +63,12 @@ class ProductViewModel: ObservableObject {
             } else if let returnedError {
                 print("Error when creating new zone: \(returnedError.localizedDescription)")
             }
+        }
+    }
+    
+    func getiCloudStatus() {
+        container.accountStatus { returnedaccountStatus, error in
+            self.accountStatus = returnedaccountStatus
         }
     }
     

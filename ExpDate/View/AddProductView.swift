@@ -89,6 +89,7 @@ struct AddProductView: View {
             Button("Add") {
                 addButtonPressed()
             }
+            .disabled(productVM.accountStatus != .available)
         }
     }
     
