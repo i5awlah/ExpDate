@@ -15,11 +15,10 @@ struct ScanProductView: View {
     @Binding var isPresentedAddView: Bool
     
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            
+        ZStack {
             mainView
             closeButton
-            
+            continueText
         }
         .onAppear{
             vm.recognizedItems = []
@@ -57,6 +56,22 @@ extension ScanProductView {
                 .foregroundColor(.accentColor)
                 .padding()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+    
+    private var continueText: some View {
+        Button {
+            isPresentedScan.toggle()
+            isPresentedAddView.toggle()
+        } label: {
+            Text("Continue without scan?")
+                .foregroundColor(.accentColor)
+                .padding(8)
+                .background(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+        .padding()
     }
 }
 
