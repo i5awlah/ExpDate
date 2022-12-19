@@ -5,7 +5,8 @@
 //  Created by Khawlah on 11/12/2022.
 //
 
-import Foundation
+import SwiftUI
+import CloudKit
 import UserNotifications
 
 class NotificationManager {
@@ -16,8 +17,12 @@ class NotificationManager {
         UNUserNotificationCenter.current().requestAuthorization(options: options) { success, error in
             if let error = error {
                 print(error.localizedDescription)
-            } else {
+            } else if success {
                 print("All set!")
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                    self.subscribeToNotifications()
+                }
             }
         }
     }
@@ -57,4 +62,38 @@ class NotificationManager {
         UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier])
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
     }
+    
+    // For cloud kit notification
+    
+    func subscribeToNotifications() {
+            
+            let predicate = NSPredicate(value: true)
+
+            let subscription = CKQuerySubscription(recordType: "Product", predicate: predicate, subscriptionID: "product_added_to_database", options: .firesOnRecordCreation)
+            
+            let notification = CKSubscription.NotificationInfo()
+            notification.title = "There's a new Product!"
+            notification.alertBody = "Open the app to check your list."
+            notification.soundName = "default"
+            
+            subscription.notificationInfo = notification
+            
+            CKContainer.default().privateCloudDatabase.save(subscription) { returnedSubscription, returnedError in
+                if let error = returnedError {
+                    print(error)
+                } else {
+                    print("Successfully subscribed to notifications!")
+                }
+            }
+        }
+    
+    func unsubscribeToNotifications() {
+            CKContainer.default().publicCloudDatabase.delete(withSubscriptionID: "product_added_to_database") { returnedID, returnedError in
+                if let error = returnedError {
+                    print(error)
+                } else {
+                    print("Successfully unsubscribed!")
+                }
+            }
+        }
 }
