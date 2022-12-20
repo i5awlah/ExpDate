@@ -149,6 +149,7 @@ extension ProductView {
                     .swipeActions(content: {
                         Button(role: .destructive) {
                             productDeleted = product
+                            HapticManager.instance.notification(type: .warning)
                             showingDeleteAlert = true
                         } label: {
                             Label("Delete", systemImage: "trash")
@@ -308,6 +309,7 @@ extension ProductView {
     }
     
     func showAlert(_ title: String) {
+        HapticManager.instance.notification(type: .warning)
         scannerStatusAlertTitle = title
         showScannerStatusAlert.toggle()
     }

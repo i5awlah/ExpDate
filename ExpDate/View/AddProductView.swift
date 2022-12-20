@@ -349,6 +349,7 @@ extension AddProductView {
     }
     
     func showAlert(title: String) {
+        HapticManager.instance.notification(type: .warning)
         alertTitle = title
         showAlert.toggle()
     }
