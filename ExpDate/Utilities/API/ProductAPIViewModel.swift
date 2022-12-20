@@ -11,12 +11,14 @@ class ProductAPIViewModel : ObservableObject {
     @Published var productService: ProductService = ProductService()
     @Published var product: Product
     @Published var isFeaching = false
+    @Published var isLoading = false
     
     init() {
         self.product = Product(title: "", images: [], category: [])
     }
     
     func getProductAPI(productID: String) {
+        isLoading = true
         print("getProductAPI: \(productID)")
         productService.getProductAPI(
                     id: productID,
@@ -25,9 +27,11 @@ class ProductAPIViewModel : ObservableObject {
                         print("response: \(response)")
                         self.product = response.product
                         self.isFeaching = true
+                        self.isLoading = false
                     },
                     onFailure: {(message) in
                         print("message \(message)")
+                        self.isLoading = false
                     })
     }
     

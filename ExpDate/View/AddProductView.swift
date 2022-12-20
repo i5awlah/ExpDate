@@ -37,6 +37,8 @@ struct AddProductView: View {
     @State var alertTitle: String = ""
     @State var showAlert: Bool = false
     
+    @State var addingloaded = false
+    
     
     var body: some View {
         
@@ -86,10 +88,34 @@ struct AddProductView: View {
         .navigationTitle("Add Product")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            Button("Add") {
-                addButtonPressed()
+            ToolbarItem(placement: .navigationBarTrailing) {
+                progressView
             }
-            .disabled(productVM.accountStatus != .available)
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Add") {
+                    addButtonPressed()
+                }
+                .disabled(productVM.accountStatus != .available)
+            }
+        }
+    }
+    
+    /// This progress view will display when either the ViewModel is loading, or a share is processing.
+    var progressView: some View {
+        let showProgress: Bool = {
+            if productApiViewModel.isLoading {
+                return true
+            } else if addingloaded {
+                return true
+            }
+
+            return false
+        }()
+
+        return Group {
+            if showProgress {
+                ProgressView()
+            }
         }
     }
     
@@ -260,6 +286,7 @@ extension AddProductView {
     
     func addButtonPressed() {
         if validateInputs() {
+            addingloaded = true
             addProduct()
         }
     }
@@ -313,9 +340,11 @@ extension AddProductView {
             try await productVM.refresh()
             // schedule Notification
             NotificationManager.shared.scheduleNotification(for: newProduct)
-            // dismis
-            isPresentedAddView.toggle()
         }
+        
+        addingloaded = false
+        // dismis
+        isPresentedAddView.toggle()
         
     }
     
