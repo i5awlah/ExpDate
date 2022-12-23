@@ -41,6 +41,8 @@ extension ScanProductView {
         .id(vm.dataScannerViewId)
         .onAppear{
             vm.recognizedItems = []
+            vm.barcodeID = ""
+            vm.expDate = ""
         }
         .onChange(of: vm.scanType) { _ in vm.recognizedItems = [] }
         .onChange(of: vm.recognizedText) { _ in handleRecognizedText() }

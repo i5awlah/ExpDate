@@ -16,17 +16,15 @@ struct EditProductView: View {
     @EnvironmentObject var productVM: ProductViewModel
     
     @State private var isPresentedScan = false
+    @State private var isPresentedCancelAlert = false
     
     @State var productName: String = ""
     @State var expirationDate: Date = .now
     @State var openedDate: Date = .now
-    
-    @State var inputDate = Date()
-    
+        
     @State var productQuantity = 1
     @State var notificationTime: Date = Date()
-    @State var showPicker = false
-    @State var textfailddate: String = "ExpirationDate"
+
     let startingDate:Date = Date()
     let endingDate:Date = Calendar.current.date(from: DateComponents(year: 10000)) ?? Date()
     // can't add an expired product.
@@ -37,49 +35,79 @@ struct EditProductView: View {
 
     
     var body: some View {
-        ZStack {
-            Form {
-                VStack {
-                    productImage
-                    
-                    CustomTextField(label: "Product Name", placeholder: "", text: $productName)
-                        .padding(.bottom)
+        NavigationStack {
+            ZStack {
+                Form {
+                    VStack {
+                        productImage
+                        
+                        CustomTextField(label: "Product Name", placeholder: "", text: $productName)
+                            .padding(.bottom)
+                    }
+                    expirationDateField
+                    openDateField
+                    afterOpeningExpirationMenu
+                    productCategoryMenu
+                    productQuantityStepper
+                    reminedMeBeforPicker
+                    notificationTimePicker
                 }
-                expirationDateField
-                openDateField
-                afterOpeningExpirationMenu
-                productCategoryMenu
-                productQuantityStepper
-                reminedMeBeforPicker
-                notificationTimePicker
+                
+                if isPresentedScan {
+                    ScanProductView(isPresentedScan: $isPresentedScan, isPresentedAddView: .constant(false))
+                }
+                
             }
-            
-            if isPresentedScan {
-                ScanProductView(isPresentedScan: $isPresentedScan, isPresentedAddView: .constant(false))
+            .onAppear{
+                productName = product.name
+                expirationDate = product.expirationDate
+                openedDate = product.openDate
+                afterOpeningExpiration = fromDay(day: product.afterOpeningExpiration)
+                selectedCategory = ProductCategory(rawValue: product.productCategory)
+                productQuantity = product.quantity
+                //selectedRemindBefore
+                notificationTime = product.notificationTime
+                
             }
-            
-        }
-        .onAppear{
-            productName = product.name
-            expirationDate = product.expirationDate
-            openedDate = product.openDate
-            afterOpeningExpiration = fromDay(day: product.afterOpeningExpiration)
-            selectedCategory = ProductCategory(rawValue: product.productCategory)
-            productQuantity = product.quantity
-            //selectedRemindBefore
-            notificationTime = product.notificationTime
-            
-        }
-        .onChange(of: vm.expDate, perform: { newValue in
-            if let expDate = vm.expDate {
-                expirationDate = expDate.toDate()
-            }
-        })
-        .navigationTitle("Edit Product")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            Button("Save") {
-                updateProduct()
+            .onChange(of: vm.expDate, perform: { newValue in
+                if let expDate = vm.expDate {
+                    expirationDate = expDate.toDate()
+                }
+            })
+            .alert("Are you sure you want to discard your changes?", isPresented: $isPresentedCancelAlert, actions: {
+                Button("Keep Editing", role: .cancel, action: {})
+
+                Button(role: .destructive) {
+                    dismiss()
+                } label: {
+                    Text("Discard Changes")
+                }
+            })
+            .navigationTitle("Edit Product")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        updateProduct()
+                    }
+                    .disabled(!isChenge())
+                }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(role: .cancel) {
+                        // dismis
+                        if isChenge() {
+                            HapticManager.instance.notification(type: .warning)
+                            isPresentedCancelAlert.toggle()
+                        } else {
+                            dismiss()
+                        }
+                        
+                    } label: {
+                        Text("Cancel")
+                    }
+                }
+                
+                
             }
         }
     }
@@ -291,5 +319,19 @@ extension EditProductView {
         dismiss()
         
         
+    }
+    
+    func isChenge() -> Bool {
+        if productName == product.name
+            && expirationDate == product.expirationDate
+            && openedDate == product.openDate
+            && afterOpeningExpiration == fromDay(day: product.afterOpeningExpiration)
+            && selectedCategory == ProductCategory(rawValue: product.productCategory)
+            && productQuantity == product.quantity
+            && notificationTime == product.notificationTime {
+            return false
+        } else {
+            return true
+        }
     }
 }

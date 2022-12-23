@@ -13,6 +13,7 @@ struct ProductView: View {
     
     @StateObject var productVM = ProductViewModel()
     @StateObject private var vm = AppViewModel()
+    @State private var selectedProduct: ProductModel? = nil
     
     @State private var isPresentedScan = false
     @State private var isPresentedAddView = false
@@ -58,6 +59,9 @@ struct ProductView: View {
                 
             }
             .sheet(isPresented: $isSharing, content: { shareView() })
+            .sheet(item: $selectedProduct) { product in
+                EditProductView(product: product)
+            }
             .alert("List Name", isPresented: $showAddListAlert, actions: {
                 TextField("List Name", text: $listName)
                 Button("Add", action: {
@@ -146,6 +150,9 @@ extension ProductView {
             ForEach(productVM.filterdProducts) { product in
                 productRowView(for: product)
                     .frame(height: 80)
+                    .onTapGesture {
+                        selectedProduct = product
+                    }
                     .swipeActions(content: {
                         Button(role: .destructive) {
                             productDeleted = product
@@ -190,11 +197,6 @@ extension ProductView {
     
     private func productRowView(for product: ProductModel) -> some View {
         ProductCellView(product: product)
-            .background(
-                NavigationLink("", destination: EditProductView(product: product))
-                    .opacity(0)
-            )
-        
     }
     
     var scanButton: some View {
@@ -220,6 +222,7 @@ extension ProductView {
             Task { try? await shareGroup(productVM.selectedGroup) }
         } label: {
             Image(systemName: "square.and.arrow.up")
+                .padding(8)
         }
         .opacity(productVM.isPrivateList ? 1 : 0)
     }
@@ -249,7 +252,8 @@ extension ProductView {
         Button {
             self.isListActionSheetPresented.toggle()
         } label: {
-            Label("Lists", systemImage:"list.bullet" )
+            Image(systemName: "list.bullet")
+                .padding(8)
         }
         .actionSheet(isPresented: $isListActionSheetPresented) {
             listActionSheet

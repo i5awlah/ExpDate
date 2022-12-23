@@ -21,7 +21,7 @@ struct CustomTextField: View {
         .font(.subheadline)
         .foregroundColor(.primary) .bold()
         .padding(.horizontal, 10)
-        .background(colorScheme == .light ? .white : Color(uiColor: .systemGray6))
+        .background(.clear)
         .cornerRadius(5)
         .offset(y: -23)
             if label == "Product Name" {
@@ -43,7 +43,7 @@ struct CustomTextField: View {
         .background(
         RoundedRectangle(cornerRadius: 8)
         .stroke(.gray.opacity(0.9), lineWidth: 0.5)
-        .background(colorScheme == .light ? .white : Color(uiColor: .systemGray6))
+        .background(.clear)
         .cornerRadius(8)
         )
     }
