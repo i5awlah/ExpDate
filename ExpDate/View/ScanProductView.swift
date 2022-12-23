@@ -19,7 +19,6 @@ struct ScanProductView: View {
         ZStack {
             mainView
             closeButton
-            continueText
         }
         .onAppear{
             vm.recognizedItems = []
@@ -41,8 +40,8 @@ extension ScanProductView {
         .id(vm.dataScannerViewId)
         .onAppear{
             vm.recognizedItems = []
-            vm.barcodeID = ""
-            vm.expDate = ""
+            vm.barcodeID = nil
+            vm.expDate = nil
         }
         .onChange(of: vm.scanType) { _ in vm.recognizedItems = [] }
         .onChange(of: vm.recognizedText) { _ in handleRecognizedText() }
@@ -60,21 +59,6 @@ extension ScanProductView {
                 .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-    }
-    
-    private var continueText: some View {
-        Button {
-            isPresentedScan.toggle()
-            isPresentedAddView.toggle()
-        } label: {
-            Text("Continue without scan?")
-                .foregroundColor(.accentColor)
-                .padding(8)
-                .background(colorScheme == .light ? .white : .black)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-        .padding()
     }
 }
 

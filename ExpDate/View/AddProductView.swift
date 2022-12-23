@@ -68,6 +68,7 @@ struct AddProductView: View {
         .onAppear{
             print("onAppear: \(vm.barcodeID ?? "NA")")
             guard let id = vm.barcodeID else { return }
+            vm.barcodeID = nil
             productApiViewModel.getProductAPI(productID: id)
         }
         .onChange(of: productApiViewModel.isFeaching, perform: { _ in
@@ -79,6 +80,7 @@ struct AddProductView: View {
         .onChange(of: vm.expDate, perform: { newValue in
             if let expDate = vm.expDate {
                 expirationDate = expDate.toDate()
+                vm.expDate = nil
             }
         })
         // show alert if there is an error while user enter inputs

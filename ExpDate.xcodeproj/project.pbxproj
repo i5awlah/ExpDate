@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2CCC53902940735F0006BE86 /* CustomTextFailed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC538F2940735F0006BE86 /* CustomTextFailed.swift */; };
 		903FD4D52951DAEB00816BBD /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903FD4D42951DAEB00816BBD /* HapticManager.swift */; };
+		903FD4D72955DFB900816BBD /* AddProductButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903FD4D62955DFB900816BBD /* AddProductButtonView.swift */; };
 		909176A9293F297D00392CAC /* ExpDateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176A8293F297D00392CAC /* ExpDateApp.swift */; };
 		909176AD293F297F00392CAC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 909176AC293F297F00392CAC /* Assets.xcassets */; };
 		909176B1293F297F00392CAC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 909176B0293F297F00392CAC /* Preview Assets.xcassets */; };
@@ -42,6 +43,7 @@
 		2CCC538F2940735F0006BE86 /* CustomTextFailed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextFailed.swift; sourceTree = "<group>"; };
 		903FD4D32951B6F100816BBD /* ExpDateDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ExpDateDebug.entitlements; sourceTree = "<group>"; };
 		903FD4D42951DAEB00816BBD /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
+		903FD4D62955DFB900816BBD /* AddProductButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProductButtonView.swift; sourceTree = "<group>"; };
 		909176A5293F297D00392CAC /* ExpDate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExpDate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		909176A8293F297D00392CAC /* ExpDateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpDateApp.swift; sourceTree = "<group>"; };
 		909176AC293F297F00392CAC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 			children = (
 				9091772E294B1C0B00392CAC /* CloudSharingView.swift */,
 				2CCC538F2940735F0006BE86 /* CustomTextFailed.swift */,
+				903FD4D62955DFB900816BBD /* AddProductButtonView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -304,6 +307,7 @@
 				9091772F294B1C0B00392CAC /* CloudSharingView.swift in Sources */,
 				909176C3293F377500392CAC /* OnoardingView.swift in Sources */,
 				9091772529463E5E00392CAC /* NotificationManager.swift in Sources */,
+				903FD4D72955DFB900816BBD /* AddProductButtonView.swift in Sources */,
 				909176E3294399A900392CAC /* ProductService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

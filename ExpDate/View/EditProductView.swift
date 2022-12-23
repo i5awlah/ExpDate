@@ -72,6 +72,7 @@ struct EditProductView: View {
             .onChange(of: vm.expDate, perform: { newValue in
                 if let expDate = vm.expDate {
                     expirationDate = expDate.toDate()
+                    vm.expDate = nil
                 }
             })
             .alert("Are you sure you want to discard your changes?", isPresented: $isPresentedCancelAlert, actions: {

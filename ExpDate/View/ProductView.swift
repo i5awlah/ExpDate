@@ -43,7 +43,7 @@ struct ProductView: View {
                         .padding(.top, 20)
                     VStack(spacing: 0) {
                         contentView
-                        scanButton
+                        addProductBottom
                             .opacity(productVM.isPrivateList ? 1 : 0)
                     }
                 }
@@ -199,22 +199,12 @@ extension ProductView {
         ProductCellView(product: product)
     }
     
-    var scanButton: some View {
-        Button {
+    var addProductBottom: some View {
+        AddProductButtonView {
+            isPresentedAddView.toggle()
+        } scanButtonPressed: {
             scanButtonPressed()
-        } label: {
-            HStack {
-                Image(systemName: "barcode.viewfinder")
-                Text("Scan")
-            }
-            .font(.title3)
         }
-        .padding(.top, 8)
-        .padding(.leading)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .overlay(alignment: .top, content: {
-            Divider()
-        })
     }
     
     var shareButton: some View {
