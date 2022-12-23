@@ -12,6 +12,7 @@ struct AddProductButtonView: View {
     let manuallyButtonPressed: () -> Void
     let scanButtonPressed: () -> Void
     @State var showPopUpAdding = false
+    @Environment(\.colorScheme) var colorScheme
     
     // MARK: BODY
     var body: some View {
@@ -30,9 +31,9 @@ struct AddProductButtonView: View {
                     HStack {
                         ZStack {
                             Circle()
-                                .foregroundColor(.white)
+                                .foregroundColor(colorScheme == .light ? .white : .black)
                                 .frame(width: 30, height: 30)
-                                .shadow(radius: 2)
+                                .shadow(color: Color.secondary.opacity(0.7), radius: 2)
                             Image(systemName: "plus")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
@@ -48,6 +49,7 @@ struct AddProductButtonView: View {
                 .padding(.top, 8)
                 .padding(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .background(colorScheme == .light ? .clear : Color(uiColor: .systemGray6))
                 .overlay(alignment: .top, content: {
                     Divider()
                 })
@@ -66,7 +68,7 @@ struct AddProductButtonView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .padding(12)
                                 .frame(width: 48, height: 48)
-                                .foregroundColor(.white)
+                                .foregroundColor(colorScheme == .light ? .white : .black)
                         }
                         .onTapGesture {
                             showPopUpAdding.toggle()

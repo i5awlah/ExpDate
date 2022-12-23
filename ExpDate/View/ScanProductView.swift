@@ -53,10 +53,14 @@ extension ScanProductView {
                 isPresentedScan.toggle()
             }
         } label: {
-            Image(systemName: "xmark.circle")
+            Image(systemName: "chevron.backward")
                 .font(.title)
                 .foregroundColor(.accentColor)
-                .padding()
+                .padding(10)
+                .background(colorScheme == .light ? Color.white.opacity(0.4) : Color.black.opacity(0.4))
+                .clipShape(Circle())
+                .shadow(radius: 2)
+                .padding(.leading)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
