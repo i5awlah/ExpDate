@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ScanProductView: View {
     
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var vm: AppViewModel
     
     @Binding var isPresentedScan: Bool
@@ -67,7 +68,7 @@ extension ScanProductView {
             Text("Continue without scan?")
                 .foregroundColor(.accentColor)
                 .padding(8)
-                .background(.white)
+                .background(colorScheme == .light ? .white : .black)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)

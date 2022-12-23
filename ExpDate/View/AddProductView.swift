@@ -185,10 +185,10 @@ struct AddProductView: View {
                 VStack(spacing: 10){
                     HStack{
                         Text(afterOpeningExpiration?.rawValue ?? "none")
-                            .foregroundColor((afterOpeningExpiration == nil) ? .gray : .black)
+                            .foregroundColor((afterOpeningExpiration == nil) ? .gray : .primary)
                         
                         Image(systemName: "chevron.down")
-                            .foregroundColor(Color.black)
+                            .foregroundColor(Color.primary)
                             .font(Font.system(size: 12, weight: .bold))
                     }
                     .padding(.horizontal)
@@ -219,10 +219,10 @@ struct AddProductView: View {
                 VStack(spacing: 10){
                     HStack{
                         Text((selectedCategory?.rawValue) ?? "none")
-                            .foregroundColor(selectedCategory == nil ? .gray : .black)
+                            .foregroundColor(selectedCategory == nil ? .gray : .primary)
                         
                         Image(systemName: "chevron.down")
-                            .foregroundColor(Color.black)
+                            .foregroundColor(Color.primary)
                             .font(Font.system(size: 12, weight: .bold))
                     }
                     .padding(.horizontal)

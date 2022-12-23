@@ -57,6 +57,7 @@ enum OnbordingType: CaseIterable {
 
 struct OnbordingView: View {
     
+    @Environment(\.colorScheme) var colorScheme
     @AppStorage("isUserOnboarded") var isUserOnboarded: Bool = false
     @State var selectedOnbordingType: OnbordingType = .scan
     
@@ -112,8 +113,9 @@ extension OnbordingView {
 
 extension OnbordingView {
     func setupAppearance() {
-        UIPageControl.appearance().currentPageIndicatorTintColor = .black
-        UIPageControl.appearance().pageIndicatorTintColor = UIColor.black.withAlphaComponent(0.2)
+        UIPageControl.appearance().currentPageIndicatorTintColor =
+        colorScheme == .dark ? .white : .black
+        UIPageControl.appearance().pageIndicatorTintColor = colorScheme == .dark ? UIColor.white.withAlphaComponent(0.2) : UIColor.black.withAlphaComponent(0.2)
     }
 }
 

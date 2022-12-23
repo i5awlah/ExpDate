@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ProductCellView: View {
+    @Environment(\.colorScheme) var colorScheme
     var valueProgress: Double {
         let dayLeft = Double (product.associatedRecord.creationDate?.diff_day ?? 0) * -1
         let total = Double (product.expiry.diff_day) + dayLeft
@@ -19,9 +20,9 @@ struct ProductCellView: View {
     var body: some View {
         
         RoundedRectangle(cornerRadius: 8)
-            .fill(Color.white)
+            .fill(colorScheme == .light ? .white : .black)
             .frame(height: 88)
-            .shadow(radius: 1.5, x: 0, y: 0.5)
+            .shadow(color: Color.secondary.opacity(0.7), radius: 1.5, x: 0, y: 0.5)
             .overlay(alignment:.leading){
                 VStack {
                     HStack(alignment: .top) {
@@ -62,7 +63,7 @@ struct ProductCellView: View {
             }
             .overlay {
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.white)
+                    .fill(colorScheme == .light ? .white : .black)
                     .frame(height: 88)
                     .opacity(product.expiry.polite == "Expired" ? 0.6 : 0)
             }

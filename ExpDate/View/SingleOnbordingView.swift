@@ -9,13 +9,14 @@ import SwiftUI
 
 struct SingleOnbordingView: View {
     
+    @Environment(\.colorScheme) var colorScheme
     @AppStorage("isUserOnboarded") var isUserOnboarded: Bool = false
     let onbordingType: OnbordingType
     
     var body: some View {
         
         VStack(spacing:20) {
-            Image(onbordingType.image)
+            Image(colorScheme == .light ? onbordingType.image : onbordingType.image + "_dark")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 300, height: 300)
@@ -28,17 +29,20 @@ struct SingleOnbordingView: View {
                 .foregroundColor(.secondary)
             
             if onbordingType == .share {
-                Button("Get Started"){
+                Button {
                     withAnimation(.spring()) {
                         isUserOnboarded = true
                     }
+                } label: {
+                    Text("Get Started")
+                        .font(.headline)
+                        .padding()
+                        .foregroundColor(colorScheme == .light ? .white : .black)
+                        .frame(width: 300, height: 50)
+                        .background(Color.accentColor)
+                        .mask(RoundedRectangle(cornerRadius: 10, style: .continuous))
                 }
-                .font(.headline)
-                .padding()
-                .foregroundColor(.white)
-                .frame(width: 300, height: 50)
-                .background(Color.accentColor)
-                .mask(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                
             }
 
         }

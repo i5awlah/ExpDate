@@ -122,7 +122,7 @@ extension ProductView {
                     
                     VStack(spacing:12){
                         Text(category.rawValue)
-                            .foregroundColor(productVM.selectedCategory == category ? .accentColor : .black)
+                            .foregroundColor(productVM.selectedCategory == category ? .accentColor : .primary)
                         
                         Capsule()
                             .fill(productVM.selectedCategory == category ? Color.accentColor : Color.clear)

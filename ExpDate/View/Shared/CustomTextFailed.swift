@@ -12,15 +12,16 @@ struct CustomTextField: View {
     let label: String
     let placeholder: String
     @Binding var text: String
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         ZStack(alignment: .leading) {
         Text(label)
                 
         .font(.subheadline)
-        .foregroundColor(.black) .bold()
+        .foregroundColor(.primary) .bold()
         .padding(.horizontal, 10)
-        .background(.white)
+        .background(colorScheme == .light ? .white : Color(uiColor: .systemGray6))
         .cornerRadius(5)
         .offset(y: -23)
             if label == "Product Name" {
@@ -30,19 +31,19 @@ struct CustomTextField: View {
                     .fill(Color.clear)
                     .overlay(alignment: .leading) {
                         Text(text == "" ? placeholder : text)
-                            .foregroundColor(text == "" ? Color(uiColor: .systemGray3) : .black)
+                            .foregroundColor(text == "" ? colorScheme == .light ? Color(uiColor: .systemGray3) : Color(uiColor: .systemGray) : .primary)
                     }
             }
         }
         .font(.callout)
-        .foregroundColor(.black)
+        .foregroundColor(.primary)
         .padding(.vertical, 5)
         .padding(.horizontal, 10)
         .frame(height: 40)
         .background(
         RoundedRectangle(cornerRadius: 8)
         .stroke(.gray.opacity(0.9), lineWidth: 0.5)
-        .background(.white)
+        .background(colorScheme == .light ? .white : Color(uiColor: .systemGray6))
         .cornerRadius(8)
         )
     }
