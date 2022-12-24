@@ -49,7 +49,7 @@ struct AddProductButtonView: View {
                 .padding(.top, 8)
                 .padding(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(colorScheme == .light ? .clear : Color(uiColor: .systemGray6))
+                .background(colorScheme == .light ? .white : Color(uiColor: .systemGray6))
                 .overlay(alignment: .top, content: {
                     Divider()
                 })

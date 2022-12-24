@@ -41,12 +41,11 @@ struct ProductView: View {
                 VStack {
                     categories
                         .padding(.top, 20)
-                    VStack(spacing: 0) {
                         contentView
-                        addProductBottom
-                            .opacity(productVM.isPrivateList ? 1 : 0)
-                    }
                 }
+                
+                addProductBottom
+                    .opacity(productVM.isPrivateList ? 1 : 0)
                 
                 if isPresentedScan {
                     ScanProductView(isPresentedScan: $isPresentedScan, isPresentedAddView: $isPresentedAddView)
