@@ -1,9 +1,16 @@
 # ExpDate
 
+## Big Idea
+Lifestyle
 
-An app that helps product consumers who want to take full advantage of the product by tracking the validity of the product and reminding them of their expiration date in order to avoid bad symptoms
 
-The app incorporates:
+## Challenge Statement
+Improving quality of life in terms of products
+
+## Solution Concept
+A tool for scanning products expiration date. for consumers who need  to be notified before products expired so that will help them get the benefits of products
+
+## Technologies & Tools
 * SwiftUI
 * MVVM
 * Cloud Kit
@@ -22,3 +29,7 @@ The app incorporates:
 ## Requirements
 * Xcode
 * Apple Developer Account
+
+## Challenge Summary
+![image](https://github.com/i5awlah/ExpDate/blob/main/Attachments/AppOverview.png)
+
