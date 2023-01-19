@@ -153,7 +153,7 @@ extension ProductView {
                         selectedProduct = product
                     }
                     .swipeActions(content: {
-                        Button(role: .destructive) {
+                        Button(role: .none) { // make role as non to fix delete behavor
                             productDeleted = product
                             HapticManager.instance.notification(type: .warning)
                             showingDeleteAlert = true
@@ -161,21 +161,22 @@ extension ProductView {
                             Label("Delete", systemImage: "trash")
                                 .labelStyle(.iconOnly)
                         }
-                    })
-                    .alert("Are you sure to delete \(productDeleted?.name ?? "")?", isPresented: $showingDeleteAlert, actions: {
-                        Button("Cancel", role: .cancel, action: {})
-
-                        Button(role: .destructive) {
-                            if let productDeleted {
-                                deleteProduct(productDeleted)
-                            }
-                        } label: {
-                            Text("Delete")
-                        }
+                        .tint(.red) // color of delete
                     })
             }
             .listRowSeparator(.hidden)
         }
+        .alert("Are you sure to delete \(productDeleted?.name ?? "")?", isPresented: $showingDeleteAlert, actions: {
+            Button("Cancel", role: .cancel, action: {})
+
+            Button(role: .destructive) {
+                if let productDeleted {
+                    deleteProduct(productDeleted)
+                }
+            } label: {
+                Text("Delete")
+            }
+        })
         .scrollContentBackground(.hidden)
         .listStyle(.plain)
         .refreshable {
