@@ -10,6 +10,7 @@
 		2CCC53902940735F0006BE86 /* CustomTextFailed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC538F2940735F0006BE86 /* CustomTextFailed.swift */; };
 		903FD4D52951DAEB00816BBD /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903FD4D42951DAEB00816BBD /* HapticManager.swift */; };
 		903FD4D72955DFB900816BBD /* AddProductButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903FD4D62955DFB900816BBD /* AddProductButtonView.swift */; };
+		9085E4E1297A96A7001C46B2 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9085E4E0297A96A7001C46B2 /* ImagePicker.swift */; };
 		909176A9293F297D00392CAC /* ExpDateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 909176A8293F297D00392CAC /* ExpDateApp.swift */; };
 		909176AD293F297F00392CAC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 909176AC293F297F00392CAC /* Assets.xcassets */; };
 		909176B1293F297F00392CAC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 909176B0293F297F00392CAC /* Preview Assets.xcassets */; };
@@ -44,6 +45,7 @@
 		903FD4D32951B6F100816BBD /* ExpDateDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ExpDateDebug.entitlements; sourceTree = "<group>"; };
 		903FD4D42951DAEB00816BBD /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		903FD4D62955DFB900816BBD /* AddProductButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddProductButtonView.swift; sourceTree = "<group>"; };
+		9085E4E0297A96A7001C46B2 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		909176A5293F297D00392CAC /* ExpDate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExpDate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		909176A8293F297D00392CAC /* ExpDateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpDateApp.swift; sourceTree = "<group>"; };
 		909176AC293F297F00392CAC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 		2CCC5391294073660006BE86 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				9085E4E0297A96A7001C46B2 /* ImagePicker.swift */,
 				9091772E294B1C0B00392CAC /* CloudSharingView.swift */,
 				2CCC538F2940735F0006BE86 /* CustomTextFailed.swift */,
 				903FD4D62955DFB900816BBD /* AddProductButtonView.swift */,
@@ -286,6 +289,7 @@
 				909176DC294398CF00392CAC /* APICallManager.swift in Sources */,
 				903FD4D52951DAEB00816BBD /* HapticManager.swift in Sources */,
 				909176C5293F379900392CAC /* SplashScreenView.swift in Sources */,
+				9085E4E1297A96A7001C46B2 /* ImagePicker.swift in Sources */,
 				909176CA293F407600392CAC /* Extensions.swift in Sources */,
 				2CCC53902940735F0006BE86 /* CustomTextFailed.swift in Sources */,
 				909176D0294079F800392CAC /* AppViewModel.swift in Sources */,
