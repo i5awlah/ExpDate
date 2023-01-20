@@ -14,6 +14,11 @@ struct ExpDateApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
+    init() {
+        // to make alert and action sheet using the accent color
+        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = UIColor(Color("AccentColor"))
+    }
+    
     var body: some Scene {
         WindowGroup {
             SplashScreenView()
