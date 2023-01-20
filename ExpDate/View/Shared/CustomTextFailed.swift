@@ -20,8 +20,9 @@ struct CustomTextField: View {
                 
         .font(.subheadline)
         .foregroundColor(.primary) .bold()
-        .padding(.horizontal, 10)
-        .background(.clear)
+        .padding(.horizontal, 5)
+        .background(Color("whiteColor"))
+        .padding(.horizontal, 8)
         .cornerRadius(5)
         .offset(y: -23)
             if label == "Product Name" {
