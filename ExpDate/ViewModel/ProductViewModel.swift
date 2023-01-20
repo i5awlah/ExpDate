@@ -68,7 +68,9 @@ class ProductViewModel: ObservableObject {
     
     func getiCloudStatus() {
         container.accountStatus { returnedaccountStatus, error in
-            self.accountStatus = returnedaccountStatus
+            DispatchQueue.main.async {
+                self.accountStatus = returnedaccountStatus
+            }
         }
     }
     
@@ -140,7 +142,7 @@ class ProductViewModel: ObservableObject {
     /// Fetches both private and shared products in parallel.
     /// - Returns: A tuple containing separated private and shared products.
     func fetchPrivateAndSharedProducts() async throws -> (private: [ProductGroup], shared: [ProductGroup]) {
-        // Determine zones for each set of contacts.
+        // Determine zones for each set of products.
         // In the Private DB, we want to ignore the default zone.
         let privateZones = try await database.allRecordZones()
             .filter { $0.zoneID != CKRecordZone.default().zoneID }
@@ -171,7 +173,7 @@ class ProductViewModel: ObservableObject {
 
             try await database.save(productRecord)
         } catch {
-            debugPrint("ERROR: Failed to save new Contact: \(error)")
+            debugPrint("ERROR: Failed to save new Product: \(error)")
             throw error
         }
     }
@@ -184,7 +186,7 @@ class ProductViewModel: ObservableObject {
 
     /// Fetches an existing `CKShare` on a group zone, or creates a new one in preparation to share a group of products with another user.
     /// - Parameters:
-    ///   - contactGroup: Group of Products to share.
+    ///   - productGroup: Group of Products to share.
     ///   - completionHandler: Handler to process a `success` or `failure` result.
     func fetchOrCreateShare(productGroup: ProductGroup) async throws -> (CKShare, CKContainer) {
         guard let existingShare = productGroup.zone.share else {
@@ -220,7 +222,7 @@ class ProductViewModel: ObservableObject {
         var allProducts: [ProductGroup] = []
 
         // Inner function retrieving and converting all product records for a single zone.
-        @Sendable func contactsInZone(_ zone: CKRecordZone) async throws -> [ProductModel] {
+        @Sendable func productsInZone(_ zone: CKRecordZone) async throws -> [ProductModel] {
             if zone.zoneID == CKRecordZone.default().zoneID {
                 return []
             }
@@ -235,10 +237,10 @@ class ProductViewModel: ObservableObject {
 
             while awaitingChanges {
                 let zoneChanges = try await database.recordZoneChanges(inZoneWith: zone.zoneID, since: nextChangeToken)
-                let contacts = zoneChanges.modificationResultsByID.values
+                let products = zoneChanges.modificationResultsByID.values
                     .compactMap { try? $0.get().record }
                     .compactMap { ProductModel(record: $0) }
-                allProducts.append(contentsOf: contacts)
+                allProducts.append(contentsOf: products)
 
                 awaitingChanges = zoneChanges.moreComing
                 nextChangeToken = zoneChanges.changeToken
@@ -247,17 +249,17 @@ class ProductViewModel: ObservableObject {
             return allProducts
         }
 
-        // Using this task group, fetch each zone's contacts in parallel.
+        // Using this task group, fetch each zone's products in parallel.
         try await withThrowingTaskGroup(of: (CKRecordZone, [ProductModel]).self) { group in
             for zone in zones {
                 group.addTask {
-                    (zone, try await contactsInZone(zone))
+                    (zone, try await productsInZone(zone))
                 }
             }
 
             // As each result comes back, append it to a combined array to finally return.
-            for try await (zone, contactsResult) in group {
-                allProducts.append(ProductGroup(zone: zone, products: contactsResult))
+            for try await (zone, productsResult) in group {
+                allProducts.append(ProductGroup(zone: zone, products: productsResult))
             }
         }
 
