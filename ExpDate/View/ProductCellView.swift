@@ -12,7 +12,8 @@ struct ProductCellView: View {
     var valueProgress: Double {
         let dayLeft = Double (product.associatedRecord.creationDate?.diff_day ?? 0) * -1
         let total = Double (product.expiry.diff_day) + dayLeft
-        return (dayLeft * 100) / total
+        let vP = (dayLeft * 100) / total
+        return vP > 100 ? 100 : vP
     }
 
     let product: ProductModel
@@ -31,13 +32,17 @@ struct ProductCellView: View {
                             .stroke(Color(uiColor: .systemGray4) , lineWidth: 0.5)
                             .frame(width: 60, height: 60)
                             .overlay{
-                                AsyncImage(url: URL(string: product.imageurl)) { image in
-                                    image
-                                        .resizable()
-                                        .frame(width: 50,height:50)
-                                        .clipShape(Rectangle())
-                                } placeholder: {
-                                    ProgressView()
+                                if product.imageurl.isEmpty {
+                                    Image(systemName: "photo")
+                                } else {
+                                    AsyncImage(url: URL(string: product.imageurl)) { image in
+                                        image
+                                            .resizable()
+                                            .frame(width: 50,height:50)
+                                            .clipShape(Rectangle())
+                                    } placeholder: {
+                                        ProgressView()
+                                    }
                                 }
                             }
                         
