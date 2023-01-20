@@ -39,6 +39,10 @@ struct AddProductView: View {
     
     @State var addingloaded = false
     
+    // for Image Picker
+    @State var selectedImage: UIImage?
+    @State var didSet: Bool = false
+    @State private var showingImagePicker = false
     
     var body: some View {
         
@@ -122,27 +126,55 @@ struct AddProductView: View {
     }
     
     var productImage: some View {
-        AsyncImage(url: URL(
-            string: productApiViewModel.product.images.isEmpty ? "" : productApiViewModel.product.images[0]
-        )
-        ) { image in
-            ZStack {
-                image
-                    .resizable()
-                    .frame(width: 130, height: 130)
-                    .clipShape(Circle())
-                    .overlay(
-                        Circle().stroke(.gray, lineWidth: 1))
-            }
-        } placeholder: {
-            ZStack {
-                Circle()
-                    .foregroundColor(Color(uiColor: .systemGray5))
-                    .frame(width: 130)
-                Image(systemName: "camera")
+        Group {
+            if productApiViewModel.product.images.isEmpty {
+                if let selectedImage {
+                    Image(uiImage: selectedImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 130, height: 130)
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle().stroke(.gray, lineWidth: 1))
+                } else {
+                    ZStack {
+                        Circle()
+                            .foregroundColor(Color(uiColor: .systemGray5))
+                            .frame(width: 130)
+                        Image(systemName: "camera")
+                    }
+                }
+                
+            } else {
+                AsyncImage(url: URL(
+                    string: productApiViewModel.product.images[0]
+                )
+                ) { image in
+                    ZStack {
+                        image
+                            .resizable()
+                            .frame(width: 130, height: 130)
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle().stroke(.gray, lineWidth: 1))
+                    }
+                } placeholder: {
+                    ZStack {
+                        Circle()
+                            .foregroundColor(Color(uiColor: .systemGray5))
+                            .frame(width: 130)
+                        ProgressView()
+                    }
+                }
             }
         }
+        .onTapGesture {
+            showingImagePicker.toggle()
+        }
         .padding(.bottom)
+        .sheet(isPresented: $showingImagePicker) {
+            ImagePicker(selectedImage: $selectedImage, didSet: $didSet, sourceType: .photoLibrary)
+        }
     }
     
     var expirationDateField: some View {
@@ -289,7 +321,8 @@ extension AddProductView {
     func addButtonPressed() {
         if validateInputs() {
             addingloaded = true
-            addProduct()
+            NotificationManager.shared.requestPermission()
+            handleImage()
         }
     }
     
@@ -310,30 +343,63 @@ extension AddProductView {
         return true
     }
     
-    func addProduct() {
-        
-        NotificationManager.shared.requestPermission()
-        
+    func handleImage() {
         let imageurl = productApiViewModel.product.images.isEmpty ? "" : productApiViewModel.product.images[0]
         
-        var newProduct = ProductModel(
-            id: UUID().uuidString,
-            imageurl: imageurl,
-            name: productName,
-            expirationDate: expirationDate,
-            openDate: openedDate,
-            afterOpeningExpiration: afterOpeningExpiration?.day ?? 0,
-            productCategory: selectedCategory?.rawValue ?? ProductCategory.selfCare.rawValue,
-            quantity: productQuantity,
-            notificationTime: notificationTime,
-            associatedRecord: CKRecord(recordType: "Product")
-        )
-        
-        let notificationTime = calcNotificationTime(
-            product: newProduct,
-            remindMeInDay: selectedRemindBefore.day)
-        
-        newProduct.notificationTime = notificationTime ?? newProduct.expiry
+        var returnedCKAsset: CKAsset?
+        // check if user upload photo
+        if selectedImage != nil {
+            Task {
+                returnedCKAsset = try await convertUIImageToCKAsset()
+                
+                var newProduct = ProductModel(
+                    id: UUID().uuidString,
+                    imageurl: "",
+                    imageURL: (selectedImage != nil) ? returnedCKAsset?.fileURL : nil,
+                    name: productName,
+                    expirationDate: expirationDate,
+                    openDate: openedDate,
+                    afterOpeningExpiration: afterOpeningExpiration?.day ?? 0,
+                    productCategory: selectedCategory?.rawValue ?? ProductCategory.selfCare.rawValue,
+                    quantity: productQuantity,
+                    notificationTime: notificationTime,
+                    associatedRecord: CKRecord(recordType: "Product")
+                )
+                
+                let notificationTime = calcNotificationTime(
+                    product: newProduct,
+                    remindMeInDay: selectedRemindBefore.day)
+                
+                newProduct.notificationTime = notificationTime ?? newProduct.expiry
+                
+                addProduct(newProduct: newProduct)
+            }
+        } else {
+            var newProduct = ProductModel(
+                id: UUID().uuidString,
+                imageurl: imageurl,
+                imageURL: nil,
+                name: productName,
+                expirationDate: expirationDate,
+                openDate: openedDate,
+                afterOpeningExpiration: afterOpeningExpiration?.day ?? 0,
+                productCategory: selectedCategory?.rawValue ?? ProductCategory.selfCare.rawValue,
+                quantity: productQuantity,
+                notificationTime: notificationTime,
+                associatedRecord: CKRecord(recordType: "Product")
+            )
+            
+            let notificationTime = calcNotificationTime(
+                product: newProduct,
+                remindMeInDay: selectedRemindBefore.day)
+            
+            newProduct.notificationTime = notificationTime ?? newProduct.expiry
+            
+            addProduct(newProduct: newProduct)
+        }
+    }
+    
+    func addProduct(newProduct: ProductModel) {
         
         print("Product\n : \(newProduct)")
         
@@ -348,6 +414,22 @@ extension AddProductView {
         // dismis
         isPresentedAddView.toggle()
         
+    }
+    
+    func convertUIImageToCKAsset() async throws -> CKAsset? {
+        guard
+            let imageURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first?.appendingPathComponent("\(UUID().uuidString).jpg"),
+            let data = selectedImage?.jpegData(compressionQuality: 1.0) else { return nil}
+        
+        do {
+            try data.write(to: imageURL)
+            let asset = CKAsset(fileURL: imageURL)
+            return asset
+            
+        } catch let error {
+            print(error.localizedDescription)
+            return nil
+        }
     }
     
     func showAlert(title: String) {

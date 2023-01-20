@@ -32,16 +32,31 @@ struct ProductCellView: View {
                             .stroke(Color(uiColor: .systemGray4) , lineWidth: 0.5)
                             .frame(width: 60, height: 60)
                             .overlay{
-                                if product.imageurl.isEmpty {
+                                if product.imageurl.isEmpty && product.imageURL == nil {
                                     Image(systemName: "photo")
                                 } else {
-                                    AsyncImage(url: URL(string: product.imageurl)) { image in
-                                        image
-                                            .resizable()
-                                            .frame(width: 50,height:50)
-                                            .clipShape(Rectangle())
-                                    } placeholder: {
-                                        ProgressView()
+                                    if product.imageURL != nil {
+                                        AsyncImage(url: product.imageURL) { image in
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 60,height:60)
+                                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                .overlay(RoundedRectangle(cornerRadius: 10)
+                                                    .stroke(Color(uiColor: .systemGray4) , lineWidth: 0.5))
+                                        } placeholder: {
+                                            ProgressView()
+                                        }
+                                    } else {
+                                        AsyncImage(url: URL(string: product.imageurl)) { image in
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                                .frame(width: 50,height:50)
+                                                .clipShape(Rectangle())
+                                        } placeholder: {
+                                            ProgressView()
+                                        }
                                     }
                                 }
                             }

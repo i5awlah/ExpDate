@@ -18,6 +18,7 @@ enum ProductCategory: String, CaseIterable {
 struct ProductModel: Identifiable {
     let id: String
     let imageurl: String
+    let imageURL: URL?
     let name: String
     let expirationDate: Date
     let openDate: Date
@@ -65,19 +66,36 @@ extension ProductModel {
         self.productCategory = productCategoryString
         self.quantity = quantity
         self.notificationTime = notificationTime
+        
+        let imageAsset = record.value(forKey: "image") as? CKAsset
+        self.imageURL = imageAsset?.fileURL
     }
     
     func toDictonary() -> [String: Any] {
-        return [
-            "imageurl": imageurl,
-            "name": name,
-            "expirationDate": expirationDate,
-            "openDate": openDate,
-            "afterOpeningExpiration": afterOpeningExpiration,
-            "productCategory": productCategory,
-            "quantity": quantity,
-            "notificationTime" : notificationTime
-        ]
+        if imageURL != nil {
+            return [
+                "imageurl": imageurl,
+                "image": CKAsset(fileURL: imageURL!),
+                "name": name,
+                "expirationDate": expirationDate,
+                "openDate": openDate,
+                "afterOpeningExpiration": afterOpeningExpiration,
+                "productCategory": productCategory,
+                "quantity": quantity,
+                "notificationTime" : notificationTime
+            ]
+        } else {
+            return [
+                "imageurl": imageurl,
+                "name": name,
+                "expirationDate": expirationDate,
+                "openDate": openDate,
+                "afterOpeningExpiration": afterOpeningExpiration,
+                "productCategory": productCategory,
+                "quantity": quantity,
+                "notificationTime" : notificationTime
+            ]
+        }
     }
 }
 
@@ -91,7 +109,7 @@ extension ProductModel {
         
         return ProductModel(
             id: UUID().uuidString,
-            imageurl: "https://123office.com/products/10652/images/2065144/9438490__67880.1651139149.1280.1280.jpg?c=1",
+            imageurl: "https://123office.com/products/10652/images/2065144/9438490__67880.1651139149.1280.1280.jpg?c=1", imageURL: nil,
             name: "Carmex Moisturizing Lip Balm, Original Flavor",
             expirationDate: expirationDate,
             openDate: openDate,
